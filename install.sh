@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# --------------------------- #
-# ----- RUN ME AS ROOT! ----- #
-# --------------------------- #
-
 # ------------------------------------------------- #
 # ----- INSTALL Debian APT AVAILABLE SOFTWARE ----- #
 # ------------------------------------------------- #
@@ -142,32 +138,32 @@ sudo apt install github-desktop
 sudo apt install -y build-essential pkg-config libc6-dev libssl-dev libexpat1-dev libavcodec-dev libgl1-mesa-dev qtbase5-dev zlib1g-dev
 
 # Download Files
-wget https://www.makemkv.com/download/makemkv-bin-1.17.3.tar.gz
-wget https://www.makemkv.com/download/makemkv-oss-1.17.3.tar.gz
+wget https://www.makemkv.com/download/makemkv-bin-1.17.4.tar.gz
+wget https://www.makemkv.com/download/makemkv-oss-1.17.4.tar.gz
 
 # Unzip Files and Remove tarballs
-tar -xvvf makemkv-bin-1.17.3.tar.gz
-tar -xvvf makemkv-oss-1.17.3.tar.gz
-rm makemkv-bin-1.17.3.tar.gz
-rm makemkv-oss-1.17.3.tar.gz
+tar -xvvf makemkv-bin-1.17.4.tar.gz
+tar -xvvf makemkv-oss-1.17.4.tar.gz
+sudo rm makemkv-bin-1.17.4.tar.gz
+sudo rm makemkv-oss-1.17.4.tar.gz
 
 # Build OSS and BIN
-cd makemkv-oss-1.17.3
+cd makemkv-oss-1.17.4
 chmod +x configure
 ./configure
 make
-make install
-cd ../makemkv-bin-1.17.3
+sudo make install
+cd ../makemkv-bin-1.17.4
 make
-make install
+sudo make install
 cd ..
 
 # Update icon cache for MakeMKV
-gtk-update-icon-cache /usr/share/icons/hicolor
+sudo gtk-update-icon-cache /usr/share/icons/hicolor
 
 # Remove Directories
-rm -r makemkv-oss-1.17.3
-rm -r makemkv-bin-1.17.3
+sudo rm -r makemkv-oss-1.17.4
+sudo rm -r makemkv-bin-1.17.4
 
 # ---------------------- #
 # ----- VirtualBox ----- #
@@ -276,6 +272,7 @@ for USER in $USERS; do
     gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock show-trash true
     gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock show-mounts false
     gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock custom-theme-shrink true
+    gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock disable-overview-on-startup true
     gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock running-indicator-style 'SEGMENTED'
     gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock unity-backlit-items false
     gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock running-indicator-dominant-color true
