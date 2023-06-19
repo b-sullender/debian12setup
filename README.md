@@ -9,25 +9,34 @@ This script automates the setup process for a Debian 12 system, installing vario
 ## Usage
 
 1. Login to the terminal.
-2. Download the setup script:
+2. Install required packages:
    ```shell
-   wget TODO...
+   apt install -y wget zip sudo
    ```
-3. Make the script executable:
+3. Download the setup script:
+   ```shell
+   wget https://github.com/sullewarehouse/debian12setup/archive/refs/heads/main.zip
+   ```
+4. Unzip and open directory:
+   ```shell
+   unzip main.zip
+   cd debian12setup-main
+   ```
+5. Make the script executable:
    ```shell
    chmod +x install.sh
    ```
-4. Run the script with root privileges:
+6. Run the script with root privileges:
    ```shell
    sudo ./install.sh
    ```
    Note: The script requires root privileges to perform system updates and package installations.
 
-5. Follow the prompts and enter any required information during the script execution.
+7. Follow the prompts and enter any required information during the script execution.
 
-6. Sit back and relax! The script will automatically update the system, install software packages, and configure the GNOME desktop environment.
+8. Sit back and relax! The script will automatically update the system, install software packages, and configure the GNOME desktop environment.
 
-7. Once the script finishes, your Debian 12 system will be ready for use.
+9. Once the script finishes, your Debian 12 system will be ready for use.
 
 LICENSE TERMS
 =============
