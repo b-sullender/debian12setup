@@ -67,7 +67,7 @@ sudo apt install -y evolution thunderbird
 sudo apt install -y libreoffice
 
 # Image editing & painting software
-sudo apt install -y krita inkscake
+sudo apt install -y krita inkscape
 
 # VLC Media Player
 sudo apt install -y vlc
@@ -109,8 +109,9 @@ rm google-chrome-stable_current_amd64.deb
 # ----- Visual Studio Code ----- #
 # ------------------------------ #
 
-wget -qO - https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo gpg --no-default-keyring --keyring /usr/share/keyrings/packages.microsoft.gpg --import
-sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
+curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
+sudo mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg
+sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list'
 
 sudo apt update
 sudo apt install code
@@ -128,7 +129,7 @@ code --install-extension GitHub.copilot
 # -------------------------- #
 
 wget -qO - https://apt.packages.shiftkey.dev/gpg.key | gpg --dearmor | sudo tee /usr/share/keyrings/shiftkey-packages.gpg > /dev/null
-sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/shiftkey-packages.gpg] https://apt.packages.shiftkey.dev/ubuntu/ any main" > /etc/apt/sources.list.d/shiftkey-packages.list'
+sudo sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/shiftkey-packages.gpg] https://apt.packages.shiftkey.dev/ubuntu/ any main" > /etc/apt/sources.list.d/shiftkey-packages.list'
 
 sudo apt update
 sudo apt install github-desktop
@@ -172,8 +173,20 @@ rm -r makemkv-bin-1.17.3
 # ----- VirtualBox ----- #
 # ---------------------- #
 
+# Download dependencies
+wget http://http.us.debian.org/debian/pool/main/o/openssl/libssl1.1_1.1.1n-0+deb11u5_amd64.deb
+wget http://http.us.debian.org/debian/pool/main/libv/libvpx/libvpx6_1.9.0-1_amd64.deb
+
+# Install dependencies
+sudo dpkg -i libssl1.1_1.1.1n-0+deb11u5_amd64.deb
+sudo dpkg -i libvpx6_1.9.0-1_amd64.deb
+
+# Delete files
+rm libssl1.1_1.1.1n-0+deb11u5_amd64.deb
+rm libvpx6_1.9.0-1_amd64.deb
+
 wget -O- https://www.virtualbox.org/download/oracle_vbox_2016.asc | sudo gpg --dearmor --yes --output /usr/share/keyrings/oracle-virtualbox-2016.gpg
-sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/oracle-virtualbox-2016.gpg] https://download.virtualbox.org/virtualbox/debian bullseye contrib" > /etc/apt/sources.list.d/virtualbox.list'
+sudo sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/oracle-virtualbox-2016.gpg] https://download.virtualbox.org/virtualbox/debian bullseye contrib" > /etc/apt/sources.list.d/virtualbox.list'
 
 sudo apt update
 sudo apt install -y virtualbox-7.0
@@ -189,6 +202,11 @@ rm Oracle_VM_VirtualBox_Extension_Pack-7.0.0.vbox-extpack
 # Set GNOME tweaks settings
 gsettings set org.gnome.desktop.wm.preferences button-layout 'icon:minimize,maximize,close'
 gsettings set org.gnome.mutter center-new-windows true
+
+# Use the following to find a GNOME setting
+#   gsettings list-recursively > /tmp/gsettings.before
+#   gsettings list-recursively > /tmp/gsettings.after
+#   diff /tmp/gsettings.before /tmp/gsettings.after | grep '[>|<]'
 
 # Enable extensions
 gnome-extensions enable dash-to-dock@micxgx.gmail.com
@@ -210,39 +228,39 @@ for USER in $USERS; do
     mkdir $WALLPAPERDIR
     
     # Download wallpapers
-    wget -U $WEBAGENT -P $WALLPAPERDIR --referer="https://www.uhdpaper.com/2023/02/sports-car-futuristic-mountain-4k-5370i.html" -O sports-car-futuristic-mountain-sunset.jpg "https://image-0.uhdpaper.com/wallpaper/sports-car-futuristic-mountain-sunset-scenery-digital-art-4k-wallpaper-uhdpaper.com-537@0@i.jpg"
-    wget -U $WEBAGENT -P $WALLPAPERDIR --referer="https://www.uhdpaper.com/2023/06/angry-cat-4k-6881k.html" -O angry-cat.jpg "https://image-1.uhdpaper.com/wallpaper/angry-cat-digital-art-4k-wallpaper-uhdpaper.com-688@1@k.jpg"
-    wget -U $WEBAGENT -P $WALLPAPERDIR --referer="https://www.uhdpaper.com/2023/06/mount-fuji-cherry-blossom-4k-6801k.html" -O mount-fuji-cherry-blossom-scenery-anime-art.jpg "https://image-1.uhdpaper.com/wallpaper/mount-fuji-cherry-blossom-scenery-anime-art-4k-wallpaper-uhdpaper.com-680@1@k.jpg"
-    wget -U $WEBAGENT -P $WALLPAPERDIR --referer="https://www.uhdpaper.com/2022/11/night-snow-mountain-sky-stars-4k-4820h.html" -O night-snow-mountain-sky-stars.jpg "https://image-0.uhdpaper.com/wallpaper/night-snow-mountain-sky-stars-scenery-4k-17796-4k-wallpaper-uhdpaper.com-482@0@h.jpg"
-    wget -U $WEBAGENT -P $WALLPAPERDIR --referer="https://www.uhdpaper.com/2023/06/sunset-starry-sky-planet-4k-6791k.html" -O sunset-starry-sky-planet-scenery.jpg "https://image-1.uhdpaper.com/wallpaper/sunset-starry-sky-planet-scenery-4k-wallpaper-uhdpaper.com-679@1@k.jpg"
-    wget -U $WEBAGENT -P $WALLPAPERDIR --referer="https://www.uhdpaper.com/2023/04/mountain-sky-scenery-4k-7730i.html" -O mountain-sky-scenery-digital-art.jpg "https://image-0.uhdpaper.com/wallpaper/mountain-sky-scenery-digital-art-4k-wallpaper-uhdpaper.com-773@0@i.jpg"
-    wget -U $WEBAGENT -P $WALLPAPERDIR --referer="https://www.uhdpaper.com/2023/06/optimus-prime-transformers-rise-4k-7311k.html" -O optimus-prime-transformers.jpg "https://image-1.uhdpaper.com/wallpaper/optimus-prime-transformers-rise-of-the-beasts-poster-4k-wallpaper-uhdpaper.com-731@1@k.jpg"
-    wget -U $WEBAGENT -P $WALLPAPERDIR -O the-flash.jpg https://uhdwallpapers.org/download/the-flash-2023_945774/3840x2160/
-    wget -U $WEBAGENT -P $WALLPAPERDIR -O czinger-21c.jpg https://uhdwallpapers.org/download/czinger-21c_579497/3840x2160/
-    wget -U $WEBAGENT -P $WALLPAPERDIR -O lamborghini-aventadors-roadster.jpg https://uhdwallpapers.org/download/lamborghini-aventador-s-roadster_666844/3840x2160/
-    wget -U $WEBAGENT -P $WALLPAPERDIR -O ferrari-portofino.jpg https://uhdwallpapers.org/download/ferrari-portofino_48599/3840x2160/
-    wget -U $WEBAGENT -P $WALLPAPERDIR -O spider-man-no-way-home.jpg https://uhdwallpapers.org/download/spider-man-no-way-home_945945/3840x2160/
-    wget -U $WEBAGENT -P $WALLPAPERDIR -O godzilla-vs-kong.jpg https://uhdwallpapers.org/download/godzilla-vs-kong_664994/3840x2160/
-    wget -U $WEBAGENT -P $WALLPAPERDIR -O henry-cavil-in-the-witcher.jpg https://uhdwallpapers.org/download/henry-cavli-in-the-witcher_899567/3840x2160/
-    wget -U $WEBAGENT -P $WALLPAPERDIR -O captain-marvel-poster.jpg https://uhdwallpapers.org/download/captain-marvel-poster_787798/3840x2160/
-    wget -U $WEBAGENT -P $WALLPAPERDIR -O jurassic-world-fallen-kingdom.jpg https://uhdwallpapers.org/download/jurassic-world-fallen-kingdom-2018_65769/3840x2160/
-    wget -U $WEBAGENT -P $WALLPAPERDIR -O audi-e-bike.jpg https://uhdwallpapers.org/download/audi-e-bike_664649/3840x2160/
-    wget -U $WEBAGENT -P $WALLPAPERDIR -O ray-ban-sunglasses-on-hot-sand-beach.jpg https://uhdwallpapers.org/download/ray-ban-sunglasses-on-hot-sand-beach_94744/3840x2160/
-    wget -U $WEBAGENT -P $WALLPAPERDIR -O girl-practicing-martial-arts.jpg https://uhdwallpapers.org/download/girl-practicing-martial-arts_46485/3840x2160/
-    wget -U $WEBAGENT -P $WALLPAPERDIR -O the-football-ball-is-on-fire.jpg https://uhdwallpapers.org/download/the-football-ball-is-on-fire_47649/3840x2160/
-    wget -U $WEBAGENT -P $WALLPAPERDIR -O surf-board-on-the-beach.jpg https://uhdwallpapers.org/download/surf-board-on-the-beach_64469/3840x2160/
-    wget -U $WEBAGENT -P $WALLPAPERDIR -O windows-365-blue-cubes.jpg https://uhdwallpapers.org/download/windows-365-blue-cubes_945484/3840x2160/
-    wget -U $WEBAGENT -P $WALLPAPERDIR -O kapitan-borchardt-sailing-ship.jpg https://uhdwallpapers.org/download/kapitan-borchardt-sailing-ship-on-baltic-sea_574855/3840x2160/
-    wget -U $WEBAGENT -P $WALLPAPERDIR -O shanghai-iconic-view.jpg https://uhdwallpapers.org/download/shanghai-iconic-view_897868/3840x2160/
-    wget -U $WEBAGENT -P $WALLPAPERDIR -O spider-man-miles-morales.jpg https://uhdwallpapers.org/download/spider-man-miles-morales_476775/3840x2160/
-    wget -U $WEBAGENT -P $WALLPAPERDIR -O giza-plateau-pyramid-of-khufu.jpg https://uhdwallpapers.org/download/giza-plateau-pyramid-of-khufu_894997/3840x2160/
-    wget -U $WEBAGENT -P $WALLPAPERDIR -O polar-bears-mother-and-cub.jpg https://uhdwallpapers.org/download/polar-bears-mother-and-cub_95595/3840x2160/
+    wget -U $WEBAGENT --referer="https://www.uhdpaper.com/2023/02/sports-car-futuristic-mountain-4k-5370i.html" -O $WALLPAPERDIR/sports-car-futuristic-mountain-sunset.jpg "https://image-0.uhdpaper.com/wallpaper/sports-car-futuristic-mountain-sunset-scenery-digital-art-4k-wallpaper-uhdpaper.com-537@0@i.jpg"
+    wget -U $WEBAGENT --referer="https://www.uhdpaper.com/2023/06/angry-cat-4k-6881k.html" -O $WALLPAPERDIR/angry-cat.jpg "https://image-1.uhdpaper.com/wallpaper/angry-cat-digital-art-4k-wallpaper-uhdpaper.com-688@1@k.jpg"
+    wget -U $WEBAGENT --referer="https://www.uhdpaper.com/2023/06/mount-fuji-cherry-blossom-4k-6801k.html" -O $WALLPAPERDIR/mount-fuji-cherry-blossom-scenery-anime-art.jpg "https://image-1.uhdpaper.com/wallpaper/mount-fuji-cherry-blossom-scenery-anime-art-4k-wallpaper-uhdpaper.com-680@1@k.jpg"
+    wget -U $WEBAGENT --referer="https://www.uhdpaper.com/2022/11/night-snow-mountain-sky-stars-4k-4820h.html" -O $WALLPAPERDIR/night-snow-mountain-sky-stars.jpg "https://image-0.uhdpaper.com/wallpaper/night-snow-mountain-sky-stars-scenery-4k-17796-4k-wallpaper-uhdpaper.com-482@0@h.jpg"
+    wget -U $WEBAGENT --referer="https://www.uhdpaper.com/2023/06/sunset-starry-sky-planet-4k-6791k.html" -O $WALLPAPERDIR/sunset-starry-sky-planet-scenery.jpg "https://image-1.uhdpaper.com/wallpaper/sunset-starry-sky-planet-scenery-4k-wallpaper-uhdpaper.com-679@1@k.jpg"
+    wget -U $WEBAGENT --referer="https://www.uhdpaper.com/2023/04/mountain-sky-scenery-4k-7730i.html" -O $WALLPAPERDIR/mountain-sky-scenery-digital-art.jpg "https://image-0.uhdpaper.com/wallpaper/mountain-sky-scenery-digital-art-4k-wallpaper-uhdpaper.com-773@0@i.jpg"
+    wget -U $WEBAGENT -P --referer="https://www.uhdpaper.com/2023/06/optimus-prime-transformers-rise-4k-7311k.html" -O $WALLPAPERDIR/optimus-prime-transformers.jpg "https://image-1.uhdpaper.com/wallpaper/optimus-prime-transformers-rise-of-the-beasts-poster-4k-wallpaper-uhdpaper.com-731@1@k.jpg"
+    wget -U $WEBAGENT -O $WALLPAPERDIR/the-flash.jpg https://uhdwallpapers.org/download/the-flash-2023_945774/3840x2160/
+    wget -U $WEBAGENT -O $WALLPAPERDIR/czinger-21c.jpg https://uhdwallpapers.org/download/czinger-21c_579497/3840x2160/
+    wget -U $WEBAGENT -O $WALLPAPERDIR/lamborghini-aventadors-roadster.jpg https://uhdwallpapers.org/download/lamborghini-aventador-s-roadster_666844/3840x2160/
+    wget -U $WEBAGENT -O $WALLPAPERDIR/ferrari-portofino.jpg https://uhdwallpapers.org/download/ferrari-portofino_48599/3840x2160/
+    wget -U $WEBAGENT -O $WALLPAPERDIR/spider-man-no-way-home.jpg https://uhdwallpapers.org/download/spider-man-no-way-home_945945/3840x2160/
+    wget -U $WEBAGENT -O $WALLPAPERDIR/godzilla-vs-kong.jpg https://uhdwallpapers.org/download/godzilla-vs-kong_664994/3840x2160/
+    wget -U $WEBAGENT -O $WALLPAPERDIR/henry-cavil-in-the-witcher.jpg https://uhdwallpapers.org/download/henry-cavli-in-the-witcher_899567/3840x2160/
+    wget -U $WEBAGENT -O $WALLPAPERDIR/captain-marvel-poster.jpg https://uhdwallpapers.org/download/captain-marvel-poster_787798/3840x2160/
+    wget -U $WEBAGENT -O $WALLPAPERDIR/jurassic-world-fallen-kingdom.jpg https://uhdwallpapers.org/download/jurassic-world-fallen-kingdom-2018_65769/3840x2160/
+    wget -U $WEBAGENT -O $WALLPAPERDIR/audi-e-bike.jpg https://uhdwallpapers.org/download/audi-e-bike_664649/3840x2160/
+    wget -U $WEBAGENT -O $WALLPAPERDIR/ray-ban-sunglasses-on-hot-sand-beach.jpg https://uhdwallpapers.org/download/ray-ban-sunglasses-on-hot-sand-beach_94744/3840x2160/
+    wget -U $WEBAGENT -O $WALLPAPERDIR/girl-practicing-martial-arts.jpg https://uhdwallpapers.org/download/girl-practicing-martial-arts_46485/3840x2160/
+    wget -U $WEBAGENT -O $WALLPAPERDIR/the-football-ball-is-on-fire.jpg https://uhdwallpapers.org/download/the-football-ball-is-on-fire_47649/3840x2160/
+    wget -U $WEBAGENT -O $WALLPAPERDIR/surf-board-on-the-beach.jpg https://uhdwallpapers.org/download/surf-board-on-the-beach_64469/3840x2160/
+    wget -U $WEBAGENT -O $WALLPAPERDIR/windows-365-blue-cubes.jpg https://uhdwallpapers.org/download/windows-365-blue-cubes_945484/3840x2160/
+    wget -U $WEBAGENT -O $WALLPAPERDIR/kapitan-borchardt-sailing-ship.jpg https://uhdwallpapers.org/download/kapitan-borchardt-sailing-ship-on-baltic-sea_574855/3840x2160/
+    wget -U $WEBAGENT -O $WALLPAPERDIR/shanghai-iconic-view.jpg https://uhdwallpapers.org/download/shanghai-iconic-view_897868/3840x2160/
+    wget -U $WEBAGENT -O $WALLPAPERDIR/spider-man-miles-morales.jpg https://uhdwallpapers.org/download/spider-man-miles-morales_476775/3840x2160/
+    wget -U $WEBAGENT -O $WALLPAPERDIR/giza-plateau-pyramid-of-khufu.jpg https://uhdwallpapers.org/download/giza-plateau-pyramid-of-khufu_894997/3840x2160/
+    wget -U $WEBAGENT -O $WALLPAPERDIR/polar-bears-mother-and-cub.jpg https://uhdwallpapers.org/download/polar-bears-mother-and-cub_95595/3840x2160/
     
     # ------------------------- #
     # ----- Set wallpaper ----- #
     # ------------------------- #
     
-    gsettings set org.gnome.desktop.background picture-uri "file:///$WALLPAPERDIR/sports-car-futuristic-mountain-sunset.jpg"
+    gsettings set org.gnome.desktop.background picture-uri "file:///$WALLPAPERDIR//sports-car-futuristic-mountain-sunset.jpg"
     
     # ----------------------------------------------- #
     # ----- Set dash-to-dock extension settings ----- #
@@ -250,6 +268,7 @@ for USER in $USERS; do
     
     SCHEMADIR="/home/$USER/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas/"
     gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
+    gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock dock-fixed true
     gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock extend-height true
     gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock dash-max-icon-size 36
     gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock click-action 'minimize-or-previews'
@@ -262,12 +281,15 @@ for USER in $USERS; do
     gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock running-indicator-dominant-color true
     gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock custom-theme-customize-running-dots false
     
+    # Use the following to list keys and current values of dash-to-dock extension **** change <user> to the actual users directory name ****
+    #   gsettings --schemadir /home/<user>/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas/ list-recursively org.gnome.shell.extensions.dash-to-dock
+    
 done
 
-# Use the following to list keys and current values of dash-to-dock extension **** change <user> to the actual users directory name ****
-#   gsettings --schemadir /home/<user>/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas/ list-recursively org.gnome.shell.extensions.dash-to-dock
+gsettings set org.gnome.shell favorite-apps "['firefox-esr.desktop', 'thunderbird.desktop', 'org.gnome.Terminal.desktop', 'code.desktop', 'org.qt-project.qtcreator.desktop', 'codeblocks.desktop', 'org.kde.kate.desktop', 'SciTE.desktop', 'org.gnome.gedit.desktop', 'github-desktop.desktop', 'cmake-gui.desktop', 'libreoffice-writer.desktop', 'rhythmbox.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Calendar.desktop', 'makemkv.desktop', 'org.bunkus.mkvtoolnix-gui.desktop', 'virtualbox.desktop', 'org.gnome.Software.desktop', 'gufw.desktop']"
 
-gsettings set org.gnome.shell favorite-apps "['firefox-esr.desktop', 'thunderbird.desktop', 'org.gnome.Terminal.desktop', 'code.desktop', 'org.qt-project.qtcreator.desktop', 'org.kde.kate.desktop', 'SciTE.desktop', 'org.gnome.gedit.desktop', 'github-desktop.desktop', 'cmake-gui.desktop', 'libreoffice-writer.desktop', 'rhythmbox.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Calendar.desktop', 'makemkv.desktop', 'org.bunkus.mkvtoolnix-gui.desktop', 'virtualbox.desktop', 'org.gnome.Software.desktop', 'gufw.desktop']"
+# Use the following the get your favorite apps list
+#   gsettings get org.gnome.shell favorite-apps
 
 # ------------------------ #
 # ----- Install .NET ----- #
@@ -285,16 +307,16 @@ sudo apt install -y dotnet-sdk-7.0 aspnetcore-runtime-7.0
 # -------------------------- #
 
 # Initial Download
-wget -P /usr/share/icons/breese/apps/48 -O codeblocks.svg https://upload.wikimedia.org/wikipedia/commons/b/bb/Breezeicons-apps-48-codeblocks.svg
+wget -O /usr/share/icons/breeze/apps/48/codeblocks.svg https://upload.wikimedia.org/wikipedia/commons/b/bb/Breezeicons-apps-48-codeblocks.svg
 
-# Copy to other directory's 
-cp /usr/share/icons/breese/apps/48/codeblocks.svg /usr/share/icons/breeze-dark/apps/48/codeblocks.svg
+# Copy to other directory's
+cp /usr/share/icons/breeze/apps/48/codeblocks.svg /usr/share/icons/breeze-dark/apps/48/codeblocks.svg
 
 # ----------------------- #
 # ----- WE ARE DONE ----- #
 # ----------------------- #
 
-reboot
+systemctl reboot
 
 # ----------------- #
 # ----- NOTES ----- #
