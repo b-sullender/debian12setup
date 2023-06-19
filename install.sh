@@ -280,6 +280,8 @@ for USER in $USERS; do
     gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock unity-backlit-items false
     gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock running-indicator-dominant-color true
     gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock custom-theme-customize-running-dots false
+    gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock transparency-mode 'FIXED'
+    gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock background-opacity 0.75
     
     # Use the following to list keys and current values of dash-to-dock extension **** change <user> to the actual users directory name ****
     #   gsettings --schemadir /home/<user>/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas/ list-recursively org.gnome.shell.extensions.dash-to-dock
@@ -306,11 +308,11 @@ sudo apt install -y dotnet-sdk-7.0 aspnetcore-runtime-7.0
 # ----- Download Icons ----- #
 # -------------------------- #
 
-# Initial Download
-wget -O /usr/share/icons/breeze/apps/48/codeblocks.svg https://upload.wikimedia.org/wikipedia/commons/b/bb/Breezeicons-apps-48-codeblocks.svg
+# Delete Code::Blocks IDE icon
+sudo rm /usr/share/pixmaps/codeblocks.png
 
-# Copy to other directory's
-cp /usr/share/icons/breeze/apps/48/codeblocks.svg /usr/share/icons/breeze-dark/apps/48/codeblocks.svg
+# Download new Code::Blocks IDE icon
+sudo wget -O /usr/share/pixmaps/codeblocks.svg https://upload.wikimedia.org/wikipedia/commons/b/bb/Breezeicons-apps-48-codeblocks.svg
 
 # ----------------------- #
 # ----- WE ARE DONE ----- #
