@@ -8,12 +8,17 @@ This script automates the setup process for a Debian 12 system, installing vario
 
 ## Usage
 
-1. Login to the terminal.
-2. Install required packages:
+1. Login to the terminal as root & install required packages:
    ```shell
    apt install -y wget zip sudo
    ```
-3. Download the setup script:
+2. Add your normal user to the sudo group & reboot:
+   ```shell
+   usermod -aG sudo <user>
+   reboot
+   ```
+   Note: change `<user>` to your actual username.
+3. Login to the terminal as your normal user & download the setup script:
    ```shell
    wget https://github.com/sullewarehouse/debian12setup/archive/refs/heads/main.zip
    ```
@@ -26,11 +31,11 @@ This script automates the setup process for a Debian 12 system, installing vario
    ```shell
    chmod +x install.sh
    ```
-6. Run the script with root privileges:
+6. Run the script:
    ```shell
-   sudo ./install.sh
+   bash install.sh
    ```
-   Note: The script requires root privileges to perform system updates and package installations.
+   Note: the script must be run as your normal user with root privileges to perform system updates and package installations.
 
 7. Follow the prompts and enter any required information during the script execution.
 

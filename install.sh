@@ -9,13 +9,13 @@
 # ------------------------------------------------- #
 
 # System updates
-apt -y update
-apt -y upgrade
-apt -y dist-upgrade
+sudo apt -y update
+sudo apt -y upgrade
+sudo apt -y dist-upgrade
 
 # Display Manager & Desktop Environment
-apt install -y gnome gnome-tweaks
-apt install -y gnome-shell-extension-prefs chrome-gnome-shell
+sudo apt install -y gnome gnome-tweaks
+sudo apt install -y gnome-shell-extension-prefs chrome-gnome-shell
 
 # Download GNOME extensions
 wget https://extensions.gnome.org/extension-data/dash-to-dockmicxgx.gmail.com.v84.shell-extension.zip
@@ -33,65 +33,65 @@ rm apps-menugnome-shell-extensions.gcampax.github.com.v52.shell-extension.zip
 rm VitalsCoreCoding.com.v61.shell-extension.zip
 
 # General CLI tools
-apt install -y wget gpg curl apt-transport-https speedtest-cli
+sudo apt install -y wget gpg curl apt-transport-https speedtest-cli
 
 # Essential coding tools
-apt install -y gcc g++ gcc-multilib g++-multilib gcc-mingw-w64-base
-apt install -y build-essential devscripts debhelper dh-make
-apt install -y make cmake cmake-gui git
+sudo apt install -y gcc g++ gcc-multilib g++-multilib gcc-mingw-w64-base
+sudo apt install -y build-essential devscripts debhelper dh-make
+sudo apt install -y make cmake cmake-gui git
 
 # dev files
-apt install -y libx11-dev libwayland-dev
-apt install -y libncurses-dev libssl-dev libcurl4-openssl-dev default-libmysqlclient-dev libopendkim-dev libboost-dev libopencv-dev libreadline-dev
-apt install -y libgtk-3-dev qtcreator qtbase5-dev qtbase5-examples qt5-doc qt5-doc-html qtbase5-doc-html
+sudo apt install -y libx11-dev libwayland-dev
+sudo apt install -y libncurses-dev libssl-dev libcurl4-openssl-dev default-libmysqlclient-dev libopendkim-dev libboost-dev libopencv-dev libreadline-dev
+sudo apt install -y libgtk-3-dev qtcreator qtbase5-dev qtbase5-examples qt5-doc qt5-doc-html qtbase5-doc-html
 
 # * See NOTES at the bottom for details on linking and compiling * #
 
 # Code Editors and IDE's
-apt install -y nano gedit scite kate codeblocks
+sudo apt install -y nano gedit scite kate codeblocks
 
 # -------------------------------------- #
 # ----- GENERAL SOFTWARE AND TOOLS ----- #
 # -------------------------------------- #
 
 # Graphical Uncomplicated Firewall
-apt install -y gufw
+sudo apt install -y gufw
 
 # Firefox (web browser)
-apt install -y firefox-esr
+sudo apt install -y firefox-esr
 
 # Evolution & Thunderbird (email clients)
-apt install -y evolution thunderbird
+sudo apt install -y evolution thunderbird
 
 # LibreOffice suite
-apt install -y libreoffice
+sudo apt install -y libreoffice
 
 # Image editing & painting software
-apt install -y krita inkscake
+sudo apt install -y krita inkscake
 
 # VLC Media Player
-apt install -y vlc
+sudo apt install -y vlc
 
 # Media Info
-apt install -y mediainfo mediainfo-gui
+sudo apt install -y mediainfo mediainfo-gui
 
 # MKV Tool Nix
-apt install -y mkvtoolnix mkvtoolnix-gui
+sudo apt install -y mkvtoolnix mkvtoolnix-gui
 
 # Quick Emulator (virtual machines)
-apt install -y qemu-system
+sudo apt install -y qemu-system
 
 # Virtual Machine Manager
-apt install -y virt-manager
+sudo apt install -y virt-manager
 
 # Screen Recorder
-apt install -y simplescreenrecorder
+sudo apt install -y simplescreenrecorder
 
 # Video Editor
-apt install -y kdenlive
+sudo apt install -y kdenlive
 
 # Open Broadcaster Software Studio (OBS Studio)
-apt install -y obs-studio
+sudo apt install -y obs-studio
 
 # ------------------------------------------- #
 # ----- INSTALL Debian NON-APT SOFTWARE ----- #
@@ -102,7 +102,7 @@ apt install -y obs-studio
 # ------------------------- #
 
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-apt install -y ./google-chrome-stable_current_amd64.deb
+sudo apt install -y ./google-chrome-stable_current_amd64.deb
 rm google-chrome-stable_current_amd64.deb
 
 # ------------------------------ #
@@ -112,8 +112,8 @@ rm google-chrome-stable_current_amd64.deb
 wget -qO - https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo gpg --no-default-keyring --keyring /usr/share/keyrings/packages.microsoft.gpg --import
 sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
 
-apt update
-apt install code
+sudo apt update
+sudo apt install code
 
 # Install extensions
 code --install-extension ms-vscode.cpptools
@@ -130,15 +130,15 @@ code --install-extension GitHub.copilot
 wget -qO - https://apt.packages.shiftkey.dev/gpg.key | gpg --dearmor | sudo tee /usr/share/keyrings/shiftkey-packages.gpg > /dev/null
 sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/shiftkey-packages.gpg] https://apt.packages.shiftkey.dev/ubuntu/ any main" > /etc/apt/sources.list.d/shiftkey-packages.list'
 
-apt update
-apt install github-desktop
+sudo apt update
+sudo apt install github-desktop
 
 # ------------------- #
 # ----- MakeMKV ----- #
 # ------------------- #
 
 # Install required packages
-apt install -y build-essential pkg-config libc6-dev libssl-dev libexpat1-dev libavcodec-dev libgl1-mesa-dev qtbase5-dev zlib1g-dev
+sudo apt install -y build-essential pkg-config libc6-dev libssl-dev libexpat1-dev libavcodec-dev libgl1-mesa-dev qtbase5-dev zlib1g-dev
 
 # Download Files
 wget https://www.makemkv.com/download/makemkv-bin-1.17.3.tar.gz
@@ -175,8 +175,8 @@ rm -r makemkv-bin-1.17.3
 wget -O- https://www.virtualbox.org/download/oracle_vbox_2016.asc | sudo gpg --dearmor --yes --output /usr/share/keyrings/oracle-virtualbox-2016.gpg
 sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/oracle-virtualbox-2016.gpg] https://download.virtualbox.org/virtualbox/debian bullseye contrib" > /etc/apt/sources.list.d/virtualbox.list'
 
-apt update
-apt install -y virtualbox-7.0
+sudo apt update
+sudo apt install -y virtualbox-7.0
 
 wget https://download.virtualbox.org/virtualbox/7.0.0/Oracle_VM_VirtualBox_Extension_Pack-7.0.0.vbox-extpack
 VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-7.0.0.vbox-extpack
@@ -274,11 +274,11 @@ gsettings set org.gnome.shell favorite-apps "['firefox-esr.desktop', 'thunderbir
 # ------------------------ #
 
 wget https://packages.microsoft.com/config/debian/11/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-dpkg -i packages-microsoft-prod.deb
+sudo dpkg -i packages-microsoft-prod.deb
 rm packages-microsoft-prod.deb
 
-apt update
-apt install -y dotnet-sdk-7.0 aspnetcore-runtime-7.0
+sudo apt update
+sudo apt install -y dotnet-sdk-7.0 aspnetcore-runtime-7.0
 
 # -------------------------- #
 # ----- Download Icons ----- #
