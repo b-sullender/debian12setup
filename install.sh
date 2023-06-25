@@ -274,42 +274,10 @@ done
 # ----- Set favorite-apps ----- #
 # ----------------------------- #
 
-gsettings set org.gnome.shell favorite-apps "['firefox-esr.desktop', 'thunderbird.desktop', 'org.gnome.Terminal.desktop', 'code.desktop', 'org.qt-project.qtcreator.desktop', 'codeblocks.desktop', 'org.kde.kate.desktop', 'org.gnome.gedit.desktop', 'github-desktop.desktop', 'cmake-gui.desktop', 'libreoffice-writer.desktop', 'rhythmbox.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Calendar.desktop', 'makemkv.desktop', 'virtualbox.desktop', 'org.gnome.Software.desktop', 'gufw.desktop']"
+gsettings set org.gnome.shell favorite-apps "['firefox-esr.desktop', 'thunderbird.desktop', 'org.gnome.Terminal.desktop', 'code.desktop', 'org.qt-project.qtcreator.desktop', 'codeblocks.desktop', 'org.kde.kate.desktop', 'org.gnome.gedit.desktop', 'github-desktop.desktop', 'cmake-gui.desktop', 'libreoffice-writer.desktop', 'org.gnome.Rhythmbox3.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Calendar.desktop', 'makemkv.desktop', 'virtualbox.desktop', 'org.gnome.Software.desktop', 'gufw.desktop']"
 
 # Use the following the get your favorite apps list
 #   gsettings get org.gnome.shell favorite-apps
-
-# ---------------------------------- #
-# ----- Set resolution & scale ----- #
-# ---------------------------------- #
-
-# Get the command output for the primary device
-output=$(xrandr | grep primary)
-
-# Extract the device name using text manipulation
-device=$(echo "$output" | awk '{print $1}')
-
-# Detect available display modes for the device
-modes=$(xrandr -q | awk '/'"$device"'/,/^$/' | grep -oP '\d+x\d+')
-
-# Loop through the detected modes and set the desired resolution
-for mode in $modes; do
-  if [[ $mode == "3840x2160" ]]; then
-    xrandr --output "$device" --mode "$mode"
-    
-    # Set scaling factor for 4K resolution
-    gsettings set org.gnome.desktop.interface scaling-factor 2
-    
-    # Save scaling configuration for 4K resolution
-    echo -e "[org.gnome.desktop.interface]\nscaling-factor=2" | sudo tee /usr/share/glib-2.0/schemas/93_hidpi.gschema.override > /dev/null
-    sudo glib-compile-schemas /usr/share/glib-2.0/schemas/
-    
-    break
-  elif [[ $mode == "1920x1080" ]]; then
-    xrandr --output "$device" --mode "$mode"
-    break
-  fi
-done
 
 # ----------------------- #
 # ----- WE ARE DONE ----- #
