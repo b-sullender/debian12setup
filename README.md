@@ -35,7 +35,7 @@ This script automates the setup process for a Debian 12 system, installing vario
    ```shell
    bash install.sh
    ```
-   Note: the script must be run as your normal user with root privileges to perform system updates and package installations.
+   Note: the script must be run as your normal user, the script will ask for root privileges to perform system updates and package installations if needed.
 
 7. Follow the prompts and enter any required information during the script execution.
 

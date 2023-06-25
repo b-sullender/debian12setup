@@ -74,17 +74,14 @@ sudo apt install -y mediainfo mediainfo-gui
 # MKV Tool Nix
 sudo apt install -y mkvtoolnix mkvtoolnix-gui
 
-# Quick Emulator (virtual machines)
-sudo apt install -y qemu-system
-
-# Virtual Machine Manager
-sudo apt install -y virt-manager
+# Quick Emulator & Virtual Machine Manager
+sudo apt install -y qemu-system virt-manager
 
 # Screen Recorder
 sudo apt install -y simplescreenrecorder
 
-# Video Editor
-sudo apt install -y kdenlive
+# Music Editor & Video Editor
+sudo apt install -y lmms kdenlive
 
 # Open Broadcaster Software Studio (OBS Studio)
 sudo apt install -y obs-studio
@@ -191,6 +188,17 @@ wget https://download.virtualbox.org/virtualbox/7.0.0/Oracle_VM_VirtualBox_Exten
 VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-7.0.0.vbox-extpack
 rm Oracle_VM_VirtualBox_Extension_Pack-7.0.0.vbox-extpack
 
+# ------------------------ #
+# ----- Install .NET ----- #
+# ------------------------ #
+
+wget https://packages.microsoft.com/config/debian/11/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+sudo dpkg -i packages-microsoft-prod.deb
+rm packages-microsoft-prod.deb
+
+sudo apt update
+sudo apt install -y dotnet-sdk-7.0 aspnetcore-runtime-7.0
+
 # ------------------------------- #
 # ----- Setup GNOME Desktop ----- #
 # ------------------------------- #
@@ -208,108 +216,100 @@ gsettings set org.gnome.mutter center-new-windows true
 gnome-extensions enable dash-to-dock@micxgx.gmail.com
 gnome-extensions enable apps-menu@gnome-shell-extensions.gcampax.github.com
 
-# Setup for each user desktop
+# ----------------------------------- #
+# ----- Copy icons & wallpapers ----- #
+# ----------------------------------- #
+
+# Wallpaper directory
+WALLPAPERDIR="/usr/share/backgrounds/wallpapers"
+sudo mkdir $WALLPAPERDIR
+
+# Copy wallpapers
+sudo cp -r wallpapers/* $WALLPAPERDIR
+
+# Delete original icons
+sudo rm /usr/share/pixmaps/codeblocks.png
+
+# Copy new icons
+sudo cp icons/codeblocks.svg /usr/share/pixmaps/codeblocks.svg
+
+# --------------------------------------- #
+# ----- Setup for each user desktop ----- #
+# --------------------------------------- #
+
 USERS=$(cut -d: -f1,6 /etc/passwd | awk -F: '$2 ~ /^\/home/ { print $1 }')
 for USER in $USERS; do
-
-    # ------------------------------- #
-    # ----- Download Wallpapers ----- #
-    # ------------------------------- #
-    
-    # Set variables
-    WALLPAPERDIR="/home/$USER/Pictures/Wallpapers"
-    WEBAGENT="Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0"
-    
-    # Make directory
-    mkdir $WALLPAPERDIR
-    
-    # Download wallpapers
-    wget -U $WEBAGENT --referer="https://www.uhdpaper.com/2023/02/sports-car-futuristic-mountain-4k-5370i.html" -O $WALLPAPERDIR/sports-car-futuristic-mountain-sunset.jpg "https://image-0.uhdpaper.com/wallpaper/sports-car-futuristic-mountain-sunset-scenery-digital-art-4k-wallpaper-uhdpaper.com-537@0@i.jpg"
-    wget -U $WEBAGENT --referer="https://www.uhdpaper.com/2023/06/angry-cat-4k-6881k.html" -O $WALLPAPERDIR/angry-cat.jpg "https://image-1.uhdpaper.com/wallpaper/angry-cat-digital-art-4k-wallpaper-uhdpaper.com-688@1@k.jpg"
-    wget -U $WEBAGENT --referer="https://www.uhdpaper.com/2023/06/mount-fuji-cherry-blossom-4k-6801k.html" -O $WALLPAPERDIR/mount-fuji-cherry-blossom-scenery-anime-art.jpg "https://image-1.uhdpaper.com/wallpaper/mount-fuji-cherry-blossom-scenery-anime-art-4k-wallpaper-uhdpaper.com-680@1@k.jpg"
-    wget -U $WEBAGENT --referer="https://www.uhdpaper.com/2022/11/night-snow-mountain-sky-stars-4k-4820h.html" -O $WALLPAPERDIR/night-snow-mountain-sky-stars.jpg "https://image-0.uhdpaper.com/wallpaper/night-snow-mountain-sky-stars-scenery-4k-17796-4k-wallpaper-uhdpaper.com-482@0@h.jpg"
-    wget -U $WEBAGENT --referer="https://www.uhdpaper.com/2023/06/sunset-starry-sky-planet-4k-6791k.html" -O $WALLPAPERDIR/sunset-starry-sky-planet-scenery.jpg "https://image-1.uhdpaper.com/wallpaper/sunset-starry-sky-planet-scenery-4k-wallpaper-uhdpaper.com-679@1@k.jpg"
-    wget -U $WEBAGENT --referer="https://www.uhdpaper.com/2023/04/mountain-sky-scenery-4k-7730i.html" -O $WALLPAPERDIR/mountain-sky-scenery-digital-art.jpg "https://image-0.uhdpaper.com/wallpaper/mountain-sky-scenery-digital-art-4k-wallpaper-uhdpaper.com-773@0@i.jpg"
-    wget -U $WEBAGENT -P --referer="https://www.uhdpaper.com/2023/06/optimus-prime-transformers-rise-4k-7311k.html" -O $WALLPAPERDIR/optimus-prime-transformers.jpg "https://image-1.uhdpaper.com/wallpaper/optimus-prime-transformers-rise-of-the-beasts-poster-4k-wallpaper-uhdpaper.com-731@1@k.jpg"
-    wget -U $WEBAGENT -O $WALLPAPERDIR/the-flash.jpg https://uhdwallpapers.org/download/the-flash-2023_945774/3840x2160/
-    wget -U $WEBAGENT -O $WALLPAPERDIR/czinger-21c.jpg https://uhdwallpapers.org/download/czinger-21c_579497/3840x2160/
-    wget -U $WEBAGENT -O $WALLPAPERDIR/lamborghini-aventadors-roadster.jpg https://uhdwallpapers.org/download/lamborghini-aventador-s-roadster_666844/3840x2160/
-    wget -U $WEBAGENT -O $WALLPAPERDIR/ferrari-portofino.jpg https://uhdwallpapers.org/download/ferrari-portofino_48599/3840x2160/
-    wget -U $WEBAGENT -O $WALLPAPERDIR/spider-man-no-way-home.jpg https://uhdwallpapers.org/download/spider-man-no-way-home_945945/3840x2160/
-    wget -U $WEBAGENT -O $WALLPAPERDIR/godzilla-vs-kong.jpg https://uhdwallpapers.org/download/godzilla-vs-kong_664994/3840x2160/
-    wget -U $WEBAGENT -O $WALLPAPERDIR/henry-cavil-in-the-witcher.jpg https://uhdwallpapers.org/download/henry-cavli-in-the-witcher_899567/3840x2160/
-    wget -U $WEBAGENT -O $WALLPAPERDIR/captain-marvel-poster.jpg https://uhdwallpapers.org/download/captain-marvel-poster_787798/3840x2160/
-    wget -U $WEBAGENT -O $WALLPAPERDIR/jurassic-world-fallen-kingdom.jpg https://uhdwallpapers.org/download/jurassic-world-fallen-kingdom-2018_65769/3840x2160/
-    wget -U $WEBAGENT -O $WALLPAPERDIR/audi-e-bike.jpg https://uhdwallpapers.org/download/audi-e-bike_664649/3840x2160/
-    wget -U $WEBAGENT -O $WALLPAPERDIR/ray-ban-sunglasses-on-hot-sand-beach.jpg https://uhdwallpapers.org/download/ray-ban-sunglasses-on-hot-sand-beach_94744/3840x2160/
-    wget -U $WEBAGENT -O $WALLPAPERDIR/girl-practicing-martial-arts.jpg https://uhdwallpapers.org/download/girl-practicing-martial-arts_46485/3840x2160/
-    wget -U $WEBAGENT -O $WALLPAPERDIR/the-football-ball-is-on-fire.jpg https://uhdwallpapers.org/download/the-football-ball-is-on-fire_47649/3840x2160/
-    wget -U $WEBAGENT -O $WALLPAPERDIR/surf-board-on-the-beach.jpg https://uhdwallpapers.org/download/surf-board-on-the-beach_64469/3840x2160/
-    wget -U $WEBAGENT -O $WALLPAPERDIR/windows-365-blue-cubes.jpg https://uhdwallpapers.org/download/windows-365-blue-cubes_945484/3840x2160/
-    wget -U $WEBAGENT -O $WALLPAPERDIR/kapitan-borchardt-sailing-ship.jpg https://uhdwallpapers.org/download/kapitan-borchardt-sailing-ship-on-baltic-sea_574855/3840x2160/
-    wget -U $WEBAGENT -O $WALLPAPERDIR/shanghai-iconic-view.jpg https://uhdwallpapers.org/download/shanghai-iconic-view_897868/3840x2160/
-    wget -U $WEBAGENT -O $WALLPAPERDIR/spider-man-miles-morales.jpg https://uhdwallpapers.org/download/spider-man-miles-morales_476775/3840x2160/
-    wget -U $WEBAGENT -O $WALLPAPERDIR/giza-plateau-pyramid-of-khufu.jpg https://uhdwallpapers.org/download/giza-plateau-pyramid-of-khufu_894997/3840x2160/
-    wget -U $WEBAGENT -O $WALLPAPERDIR/polar-bears-mother-and-cub.jpg https://uhdwallpapers.org/download/polar-bears-mother-and-cub_95595/3840x2160/
-    
-    # ------------------------- #
-    # ----- Set wallpaper ----- #
-    # ------------------------- #
-    
-    gsettings set org.gnome.desktop.background picture-uri "file:///$WALLPAPERDIR//sports-car-futuristic-mountain-sunset.jpg"
-    
-    # ----------------------------------------------- #
-    # ----- Set dash-to-dock extension settings ----- #
-    # ----------------------------------------------- #
-    
-    SCHEMADIR="/home/$USER/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas/"
-    gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
-    gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock dock-fixed true
-    gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock extend-height true
-    gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock dash-max-icon-size 36
-    gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock click-action 'minimize-or-previews'
-    gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock animate-show-apps false
-    gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock show-trash true
-    gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock show-mounts false
-    gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock custom-theme-shrink true
-    gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock disable-overview-on-startup true
-    gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock running-indicator-style 'SEGMENTED'
-    gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock unity-backlit-items false
-    gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock running-indicator-dominant-color true
-    gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock custom-theme-customize-running-dots false
-    gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock transparency-mode 'FIXED'
-    gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock background-opacity 0.75
-    
-    # Use the following to list keys and current values of dash-to-dock extension **** change <user> to the actual users directory name ****
-    #   gsettings --schemadir /home/<user>/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas/ list-recursively org.gnome.shell.extensions.dash-to-dock
-    
+  
+  # Set wallpaper
+  gsettings set org.gnome.desktop.background picture-uri "file:///$WALLPAPERDIR//niagara river.jpg"
+  
+  # ----------------------------------------------- #
+  # ----- Set dash-to-dock extension settings ----- #
+  # ----------------------------------------------- #
+  
+  SCHEMADIR="/home/$USER/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas/"
+  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
+  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock dock-fixed true
+  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock extend-height true
+  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock dash-max-icon-size 36
+  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock click-action 'minimize-or-previews'
+  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock animate-show-apps false
+  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock show-trash true
+  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock show-mounts false
+  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock custom-theme-shrink true
+  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock disable-overview-on-startup true
+  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock running-indicator-style 'SEGMENTED'
+  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock unity-backlit-items false
+  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock running-indicator-dominant-color true
+  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock custom-theme-customize-running-dots false
+  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock transparency-mode 'FIXED'
+  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock background-opacity 0.75
+  
+  # Use the following to list keys and current values of dash-to-dock extension **** change <user> to the actual users directory name ****
+  #   gsettings --schemadir /home/<user>/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas/ list-recursively org.gnome.shell.extensions.dash-to-dock
+  
 done
 
-gsettings set org.gnome.shell favorite-apps "['firefox-esr.desktop', 'thunderbird.desktop', 'org.gnome.Terminal.desktop', 'code.desktop', 'org.qt-project.qtcreator.desktop', 'codeblocks.desktop', 'org.kde.kate.desktop', 'SciTE.desktop', 'org.gnome.gedit.desktop', 'github-desktop.desktop', 'cmake-gui.desktop', 'libreoffice-writer.desktop', 'rhythmbox.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Calendar.desktop', 'makemkv.desktop', 'org.bunkus.mkvtoolnix-gui.desktop', 'virtualbox.desktop', 'org.gnome.Software.desktop', 'gufw.desktop']"
+# ----------------------------- #
+# ----- Set favorite-apps ----- #
+# ----------------------------- #
+
+gsettings set org.gnome.shell favorite-apps "['firefox-esr.desktop', 'thunderbird.desktop', 'org.gnome.Terminal.desktop', 'code.desktop', 'org.qt-project.qtcreator.desktop', 'codeblocks.desktop', 'org.kde.kate.desktop', 'org.gnome.gedit.desktop', 'github-desktop.desktop', 'cmake-gui.desktop', 'libreoffice-writer.desktop', 'rhythmbox.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Calendar.desktop', 'makemkv.desktop', 'virtualbox.desktop', 'org.gnome.Software.desktop', 'gufw.desktop']"
 
 # Use the following the get your favorite apps list
 #   gsettings get org.gnome.shell favorite-apps
 
-# ------------------------ #
-# ----- Install .NET ----- #
-# ------------------------ #
+# ---------------------------------- #
+# ----- Set resolution & scale ----- #
+# ---------------------------------- #
 
-wget https://packages.microsoft.com/config/debian/11/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-sudo dpkg -i packages-microsoft-prod.deb
-rm packages-microsoft-prod.deb
+# Get the command output for the primary device
+output=$(xrandr | grep primary)
 
-sudo apt update
-sudo apt install -y dotnet-sdk-7.0 aspnetcore-runtime-7.0
+# Extract the device name using text manipulation
+device=$(echo "$output" | awk '{print $1}')
 
-# -------------------------- #
-# ----- Download Icons ----- #
-# -------------------------- #
+# Detect available display modes for the device
+modes=$(xrandr -q | awk '/'"$device"'/,/^$/' | grep -oP '\d+x\d+')
 
-# Delete Code::Blocks IDE icon
-sudo rm /usr/share/pixmaps/codeblocks.png
-
-# Download new Code::Blocks IDE icon
-sudo wget -O /usr/share/pixmaps/codeblocks.svg https://upload.wikimedia.org/wikipedia/commons/b/bb/Breezeicons-apps-48-codeblocks.svg
+# Loop through the detected modes and set the desired resolution
+for mode in $modes; do
+  if [[ $mode == "3840x2160" ]]; then
+    xrandr --output "$device" --mode "$mode"
+    
+    # Set scaling factor for 4K resolution
+    gsettings set org.gnome.desktop.interface scaling-factor 2
+    
+    # Save scaling configuration for 4K resolution
+    echo -e "[org.gnome.desktop.interface]\nscaling-factor=2" | sudo tee /usr/share/glib-2.0/schemas/93_hidpi.gschema.override > /dev/null
+    sudo glib-compile-schemas /usr/share/glib-2.0/schemas/
+    
+    break
+  elif [[ $mode == "1920x1080" ]]; then
+    xrandr --output "$device" --mode "$mode"
+    break
+  fi
+done
 
 # ----------------------- #
 # ----- WE ARE DONE ----- #
