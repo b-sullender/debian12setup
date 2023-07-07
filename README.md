@@ -12,36 +12,67 @@ This script automates the setup process for a Debian 12 system, installing vario
    ```shell
    apt install -y wget zip sudo
    ```
-2. Add your normal user to the sudo group & reboot:
+2. Optionally install drivers:
+   **Prerequisites**
+   Add non-free and non-free-firmware components to APT repository:
+   ```shell
+   apt-add-repository --component contrib non-free non-free-firmware
+   apt update
+   ```
+   Install kernel headers:
+   ```shell
+   apt install linux-headers-amd64
+   ```
+   **Installation**
+   nVidia:
+   ```shell
+   apt install nvidia-driver firmware-misc-nonfree
+   ```
+   AMD:
+   ```shell
+   apt install firmware-amd-graphics
+   ```
+   Intel:
+   ```shell
+   apt install xserver-xorg-video-intel
+   ```
+   **WiFi**
+   Intel Wireless WiFi Link, Wireless-N, Advanced-N, Ultimate-N devices:
+   ```
+   apt install firmware-iwlwifi
+   ```
+   **Resources**
+   [Debian Graphics Card](https://wiki.debian.org/GraphicsCard)
+   [Debian WiFi](https://wiki.debian.org/WiFi)
+   [Debian iwlwifi](https://wiki.debian.org/iwlwifi)
+3. Add your normal user to the sudo group & reboot:
    ```shell
    usermod -aG sudo <user>
    reboot
    ```
    Note: change `<user>` to your actual username.
-3. Login to the terminal as your normal user & download the setup script:
+4. Login to the terminal as your normal user & download the setup script:
    ```shell
    wget https://github.com/sullewarehouse/debian12setup/archive/refs/heads/main.zip
    ```
-4. Unzip and open directory:
+5. Unzip and open directory:
    ```shell
    unzip main.zip
    cd debian12setup-main
    ```
-5. Make the script executable:
+6. Make the script executable:
    ```shell
    chmod +x install.sh
    ```
-6. Run the script:
+7. Run the script:
    ```shell
    bash install.sh
    ```
    Note: the script must be run as your normal user, the script will ask for root privileges to perform system updates and package installations if needed.
 
-7. Follow the prompts and enter any required information during the script execution.
+8. Follow the prompts and enter any required information during the script execution.
 
-8. Sit back and relax! The script will automatically update the system, install software packages, and configure the GNOME desktop environment.
-
-9. Once the script finishes, your Debian 12 system will be ready for use.
+9. Sit back and relax! The script will automatically update the system, install software packages, and configure the GNOME desktop environment. Once the script finishes, your Debian 12 system will be ready for use.
 
 LICENSE TERMS
 =============

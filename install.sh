@@ -1,13 +1,13 @@
 #!/bin/bash
 
-# ------------------------------------------------- #
-# ----- INSTALL Debian APT AVAILABLE SOFTWARE ----- #
-# ------------------------------------------------- #
-
 # System updates
 sudo apt -y update
 sudo apt -y upgrade
 sudo apt -y dist-upgrade
+
+# ------------------------------------------------- #
+# ----- INSTALL Debian APT AVAILABLE SOFTWARE ----- #
+# ------------------------------------------------- #
 
 # Display Manager & Desktop Environment
 sudo apt install -y gnome gnome-tweaks
@@ -162,6 +162,17 @@ sudo gtk-update-icon-cache /usr/share/icons/hicolor
 sudo rm -r makemkv-oss-1.17.4
 sudo rm -r makemkv-bin-1.17.4
 
+# ------------------------ #
+# ----- Install .NET ----- #
+# ------------------------ #
+
+wget https://packages.microsoft.com/config/debian/11/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+sudo dpkg -i packages-microsoft-prod.deb
+rm packages-microsoft-prod.deb
+
+sudo apt update
+sudo apt install -y dotnet-sdk-7.0 aspnetcore-runtime-7.0
+
 # ---------------------- #
 # ----- VirtualBox ----- #
 # ---------------------- #
@@ -187,17 +198,6 @@ sudo apt install -y virtualbox-7.0
 wget https://download.virtualbox.org/virtualbox/7.0.0/Oracle_VM_VirtualBox_Extension_Pack-7.0.0.vbox-extpack
 VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-7.0.0.vbox-extpack
 rm Oracle_VM_VirtualBox_Extension_Pack-7.0.0.vbox-extpack
-
-# ------------------------ #
-# ----- Install .NET ----- #
-# ------------------------ #
-
-wget https://packages.microsoft.com/config/debian/11/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-sudo dpkg -i packages-microsoft-prod.deb
-rm packages-microsoft-prod.deb
-
-sudo apt update
-sudo apt install -y dotnet-sdk-7.0 aspnetcore-runtime-7.0
 
 # ------------------------------- #
 # ----- Setup GNOME Desktop ----- #
