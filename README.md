@@ -13,38 +13,7 @@ This script automates the setup process for a Debian 12 system, installing vario
    apt install -y wget zip sudo
    ```
 2. Optionally install drivers:  
-   **Prerequisites**  
-   Add non-free and non-free-firmware components to APT repository:
-   ```shell
-   apt-add-repository --component contrib non-free non-free-firmware
-   apt update
-   ```
-   Install kernel headers:
-   ```shell
-   apt install linux-headers-amd64
-   ```
-   **Installation**  
-   nVidia:
-   ```shell
-   apt install nvidia-driver firmware-misc-nonfree
-   ```
-   AMD:
-   ```shell
-   apt install firmware-amd-graphics
-   ```
-   Intel:
-   ```shell
-   apt install xserver-xorg-video-intel
-   ```
-   **WiFi**
-   Intel Wireless WiFi Link, Wireless-N, Advanced-N, Ultimate-N devices:
-   ```
-   apt install firmware-iwlwifi
-   ```
-   **Resources**
-   [Debian Graphics Card](https://wiki.debian.org/GraphicsCard)
-   [Debian WiFi](https://wiki.debian.org/WiFi)
-   [Debian iwlwifi](https://wiki.debian.org/iwlwifi)
+   [Installing Drivers](drivers.md)
 3. Add your normal user to the sudo group & reboot:
    ```shell
    usermod -aG sudo <user>
