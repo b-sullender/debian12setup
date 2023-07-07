@@ -12,8 +12,8 @@ This script automates the setup process for a Debian 12 system, installing vario
    ```shell
    apt install -y wget zip sudo
    ```
-2. Optionally install drivers:
-   **Prerequisites**
+2. Optionally install drivers:  
+   **Prerequisites**  
    Add non-free and non-free-firmware components to APT repository:
    ```shell
    apt-add-repository --component contrib non-free non-free-firmware
@@ -23,7 +23,7 @@ This script automates the setup process for a Debian 12 system, installing vario
    ```shell
    apt install linux-headers-amd64
    ```
-   **Installation**
+   **Installation**  
    nVidia:
    ```shell
    apt install nvidia-driver firmware-misc-nonfree
