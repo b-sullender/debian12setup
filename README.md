@@ -42,6 +42,13 @@ This script automates the setup process for a Debian 12 system, installing vario
 
 8. Sit back and relax! The script will automatically update the system, install software packages, and configure the GNOME desktop environment. Once the script finishes, your Debian 12 system will be ready for use.
 
+## 4K Resolution & Above
+
+If you use 4K resolution then you probably want to scale the login screen:
+```shell
+echo -e "[org.gnome.desktop.interface]\nscaling-factor=2" | sudo tee /usr/share/glib-2.0/schemas/93_hidpi.gschema.override > /dev/null
+```
+
 LICENSE TERMS
 =============
 ```
