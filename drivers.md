@@ -27,11 +27,11 @@ reboot
 
 To set the terminal VGA mode, follow these steps:
 
-1. Edit the **`/etc/default/grub`** file using a text editor such as nano:
+1. Edit the `/etc/default/grub` file using a text editor such as nano:
    ```shell
    sudo nano /etc/default/grub
    ```
-2. Locate the line starting with **`GRUB_CMDLINE_LINUX_DEFAULT`** and append the following parameters to the existing line:
+2. Locate the line starting with `GRUB_CMDLINE_LINUX_DEFAULT` and append the following parameters to the existing line:
    ```shell
    GRUB_CMDLINE_LINUX_DEFAULT="quiet vga=791"
    ```
