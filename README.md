@@ -21,12 +21,12 @@ This script automates the setup process for a Debian 12 system, installing vario
    Note: change `<user>` to your actual username.
 3. Login to the terminal as your normal user & download the setup script:
    ```shell
-   wget https://github.com/sullewarehouse/debian12setup/archive/refs/heads/main.zip
+   wget https://github.com/sullewarehouse/debian12setup/releases/download/v2.0/debian12setup-v2.0.zip
    ```
 4. Unzip and open directory:
    ```shell
-   unzip main.zip
-   cd debian12setup-main
+   unzip debian12setup-v2.0.zip
+   cd debian12setup
    ```
 5. Make the script executable:
    ```shell
