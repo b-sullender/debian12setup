@@ -92,3 +92,7 @@ For any questions or feedback, please feel free to contact the script maintainer
 
 - Maintainer: [Brian Sullender](https://github.com/b-sullender)
 
+## Screenshot
+
+![Screenshot](screenshot.png)
+
