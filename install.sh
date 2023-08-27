@@ -43,12 +43,18 @@ sudo apt install -y libgtk-3-dev qtcreator qtbase5-dev qtbase5-examples qt5-doc 
 
 # * See NOTES at the bottom for details on linking and compiling * #
 
+# Scripting tools
+sudo apt install -y php php-cli php-cgi php-json php-mysql php-curl php-zip php-xml php-fileinfo
+
 # Code Editors and IDE's
 sudo apt install -y nano gedit scite kate codeblocks
 
 # -------------------------------------- #
 # ----- GENERAL SOFTWARE AND TOOLS ----- #
 # -------------------------------------- #
+
+# Printing system (Legacy printers require a driver installation)
+sudo apt install -y cups
 
 # Graphical Uncomplicated Firewall
 sudo apt install -y gufw
@@ -89,6 +95,22 @@ sudo apt install -y obs-studio
 # ------------------------------------------- #
 # ----- INSTALL Debian NON-APT SOFTWARE ----- #
 # ------------------------------------------- #
+
+# ------------------------- #
+# ----- Atomic Wallet ----- #
+# ------------------------- #
+
+# Download the application
+wget https://get.atomicwallet.io/download/atomicwallet-2.70.12.deb
+
+# Install the application
+sudo apt install ./atomicwallet-2.70.12.deb
+
+# Copy the icon to a suitable location
+sudo cp /usr/share/icons/hicolor/0x0/apps/atomic.png /usr/share/icons/hicolor/256x256/apps/atomic.png
+
+# Update icon cache for Atomic Wallet
+sudo gtk-update-icon-cache /usr/share/icons/hicolor
 
 # ------------------------- #
 # ----- Google Chrome ----- #
@@ -227,10 +249,10 @@ sudo mkdir $WALLPAPERDIR
 # Copy wallpapers
 sudo cp -r wallpapers/* $WALLPAPERDIR
 
-# Delete original icons
+# Delete Code::Blocks original icon
 sudo rm /usr/share/pixmaps/codeblocks.png
 
-# Copy new icons
+# Copy Code::Blocks new icon
 sudo cp icons/codeblocks.svg /usr/share/pixmaps/codeblocks.svg
 
 # --------------------------------------- #
