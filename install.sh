@@ -56,6 +56,9 @@ sudo apt install -y nano gedit scite kate codeblocks
 # Printing system (Legacy printers require a driver installation)
 sudo apt install -y cups
 
+# Joystick testing and calibration for gaming
+sudo apt install -y joystick jstest-gtk
+
 # Graphical Uncomplicated Firewall
 sudo apt install -y gufw
 
