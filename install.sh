@@ -32,14 +32,12 @@ rm VitalsCoreCoding.com.v61.shell-extension.zip
 sudo apt install -y wget gpg curl apt-transport-https speedtest-cli
 
 # Essential coding tools
-sudo apt install -y gcc g++ gcc-multilib g++-multilib gcc-mingw-w64-base
-sudo apt install -y build-essential devscripts debhelper dh-make
-sudo apt install -y make cmake cmake-gui git
+sudo apt install -y gcc g++ gcc-multilib g++-multilib gcc-mingw-w64-base nasm fasm build-essential devscripts debhelper dh-make make cmake cmake-gui git
 
 # dev files
 sudo apt install -y libx11-dev libwayland-dev
 sudo apt install -y libncurses-dev libssl-dev libcurl4-openssl-dev default-libmysqlclient-dev libopendkim-dev libboost-dev libwebsockets-dev libwebsocketpp-dev libopencv-dev libreadline-dev
-sudo apt install -y libgtk-3-dev qtcreator qtbase5-dev qtbase5-examples qt5-doc qt5-doc-html qtbase5-doc-html
+sudo apt install -y libgtk-3-dev libgtksourceview-3.0-1 libsdl2-dev libsdl2-doc qtcreator qtbase5-dev qtbase5-examples qt5-doc qt5-doc-html qtbase5-doc-html
 
 # * See NOTES at the bottom for details on linking and compiling * #
 
