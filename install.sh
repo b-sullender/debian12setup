@@ -40,8 +40,8 @@ sudo apt install -y libx11-dev libwayland-dev libncurses-dev libssl-dev libcurl4
 # Scripting tools
 sudo apt install -y php php-cli php-cgi php-json php-mysql php-curl php-zip php-xml php-fileinfo python3 python3-yaml python3-numpy python3-scipy python3-matplotlib python3-pandas python3-requests python3-bs4 python3-django python-django-doc python3-flask python3-sqlalchemy python3-pytest python3-virtualenv python3-bottleneck python-bottleneck-doc python3-selenium
 
-# Code Editors and IDE's
-sudo apt install -y nano gedit scite kate codeblocks
+# Code Editors, IDE's and GUI designers
+sudo apt install -y nano gedit scite kate codeblocks glade
 
 # -------------------------------------- #
 # ----- GENERAL SOFTWARE AND TOOLS ----- #
@@ -49,9 +49,6 @@ sudo apt install -y nano gedit scite kate codeblocks
 
 # Printing system (Legacy printers require a driver installation)
 sudo apt install -y cups
-
-# Joystick testing and calibration for gaming
-sudo apt install -y joystick jstest-gtk
 
 # Graphical Uncomplicated Firewall
 sudo apt install -y gufw
@@ -88,6 +85,12 @@ sudo apt install -y lmms kdenlive
 
 # Open Broadcaster Software Studio (OBS Studio)
 sudo apt install -y obs-studio
+
+# Joystick testing and calibration for gaming
+sudo apt install -y joystick jstest-gtk
+
+# Nintendo GameCube emulator
+sudo apt install -y dolphin-emu
 
 # ------------------------------------------- #
 # ----- INSTALL Debian NON-APT SOFTWARE ----- #
@@ -185,12 +188,13 @@ sudo rm -r makemkv-bin-1.17.4
 # ----- Install .NET ----- #
 # ------------------------ #
 
-wget https://packages.microsoft.com/config/debian/11/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+wget https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
 sudo dpkg -i packages-microsoft-prod.deb
 rm packages-microsoft-prod.deb
 
 sudo apt update
 sudo apt install -y dotnet-sdk-7.0 aspnetcore-runtime-7.0
+sudo apt install -y dotnet-sdk-8.0 aspnetcore-runtime-8.0
 
 # ---------------------- #
 # ----- VirtualBox ----- #
