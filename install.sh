@@ -153,36 +153,7 @@ sudo apt install github-desktop
 # ----- MakeMKV ----- #
 # ------------------- #
 
-# Install required packages
-sudo apt install -y build-essential pkg-config libc6-dev libssl-dev libexpat1-dev libavcodec-dev libgl1-mesa-dev qtbase5-dev zlib1g-dev
-
-# Download Files
-wget https://www.makemkv.com/download/makemkv-bin-1.17.4.tar.gz
-wget https://www.makemkv.com/download/makemkv-oss-1.17.4.tar.gz
-
-# Unzip Files and Remove tarballs
-tar -xvvf makemkv-bin-1.17.4.tar.gz
-tar -xvvf makemkv-oss-1.17.4.tar.gz
-sudo rm makemkv-bin-1.17.4.tar.gz
-sudo rm makemkv-oss-1.17.4.tar.gz
-
-# Build OSS and BIN
-cd makemkv-oss-1.17.4
-chmod +x configure
-./configure
-make
-sudo make install
-cd ../makemkv-bin-1.17.4
-make
-sudo make install
-cd ..
-
-# Update icon cache for MakeMKV
-sudo gtk-update-icon-cache /usr/share/icons/hicolor
-
-# Remove Directories
-sudo rm -r makemkv-oss-1.17.4
-sudo rm -r makemkv-bin-1.17.4
+sudo dpkg -i packages/makemkv_1.17.5_amd64.deb
 
 # ------------------------ #
 # ----- Install .NET ----- #

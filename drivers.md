@@ -90,6 +90,7 @@ apt install firmware-iwlwifi
 
 For more information, you can refer to the following resources:
 
+- [NVIDIA Driver Downloads](https://nvidia.com/Download/index.aspx)
 - [Debian Graphics Card](https://wiki.debian.org/GraphicsCard)
 - [Debian WiFi](https://wiki.debian.org/WiFi)
 - [Debian iwlwifi](https://wiki.debian.org/iwlwifi)
