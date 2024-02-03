@@ -41,7 +41,7 @@ sudo apt install -y libx11-dev libwayland-dev libncurses-dev libssl-dev libcurl4
 sudo apt install -y php php-cli php-cgi php-json php-mysql php-curl php-zip php-xml php-fileinfo python3 python3-yaml python3-numpy python3-scipy python3-matplotlib python3-pandas python3-requests python3-bs4 python3-django python-django-doc python3-flask python3-sqlalchemy python3-pytest python3-virtualenv python3-bottleneck python-bottleneck-doc python3-selenium
 
 # Code Editors, IDE's and GUI designers
-sudo apt install -y nano gedit scite kate codeblocks glade
+sudo apt install -y nano gedit wxhexeditor scite kate codeblocks glade
 
 # -------------------------------------- #
 # ----- GENERAL SOFTWARE AND TOOLS ----- #
@@ -88,6 +88,9 @@ sudo apt install -y obs-studio
 
 # Joystick testing and calibration for gaming
 sudo apt install -y joystick jstest-gtk
+
+# Nintendo Entertainment System (NES) emulator
+sudo apt install -y fceux
 
 # Nintendo GameCube emulator
 sudo apt install -y dolphin-emu
@@ -192,6 +195,12 @@ sudo apt install -y virtualbox-7.0
 wget https://download.virtualbox.org/virtualbox/7.0.0/Oracle_VM_VirtualBox_Extension_Pack-7.0.0.vbox-extpack
 VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-7.0.0.vbox-extpack
 rm Oracle_VM_VirtualBox_Extension_Pack-7.0.0.vbox-extpack
+
+# Get the current username
+current_user=$(whoami)
+
+# Add the current user to the 'vboxusers' group
+sudo usermod -aG vboxusers "$current_user"
 
 # ------------------------------- #
 # ----- Setup GNOME Desktop ----- #
