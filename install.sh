@@ -29,13 +29,13 @@ rm apps-menugnome-shell-extensions.gcampax.github.com.v52.shell-extension.zip
 rm VitalsCoreCoding.com.v61.shell-extension.zip
 
 # General CLI tools
-sudo apt install -y wget gpg curl apt-transport-https speedtest-cli
+sudo apt install -y wget gpg curl apt-transport-https speedtest-cli rar
 
 # Essential coding and packaging tools
-sudo apt install -y gcc g++ gcc-multilib g++-multilib gcc-mingw-w64-base nasm fasm build-essential devscripts make ninja-build cmake cmake-gui git debhelper dh-make lintian
+sudo apt install -y gcc g++ gcc-multilib g++-multilib gcc-mingw-w64-base nasm fasm build-essential devscripts make ninja-build cmake cmake-gui git debhelper dh-make lintian default-jdk gradle
 
 # Development files examples and documentation
-sudo apt install -y libx11-dev libwayland-dev libncurses-dev libssl-dev libcurl4-openssl-dev default-libmysqlclient-dev libopendkim-dev libboost-dev libwebsockets-dev libwebsocketpp-dev libopencv-dev libreadline-dev libgtk-3-dev libgtksourceview-3.0-1 libsdl2-dev libsdl2-doc qtcreator qtbase5-dev qtbase5-examples qt5-doc qt5-doc-html qtbase5-doc-html libepoxy-dev libpixman-1-dev libsamplerate0-dev libpcap-dev libslirp-dev
+sudo apt install -y libx11-dev libwayland-dev libncurses-dev libssl-dev libcurl4-openssl-dev default-libmysqlclient-dev libopendkim-dev libboost-dev libwebsockets-dev libwebsocketpp-dev libopencv-dev libreadline-dev libgtk-3-dev libgtksourceview-3.0-1 libsdl2-dev libsdl2-doc qtcreator qtbase5-dev libqt5x11extras5-dev qtbase5-private-dev qtbase5-examples qt5-doc qt5-doc-html qtbase5-doc-html libepoxy-dev libpixman-1-dev libsamplerate0-dev libpcap-dev libslirp-dev
 
 # Scripting tools
 sudo apt install -y php php-cli php-cgi php-json php-mysql php-curl php-zip php-xml php-fileinfo python3 python3-yaml python3-numpy python3-scipy python3-matplotlib python3-pandas python3-requests python3-bs4 python3-django python-django-doc python3-flask python3-sqlalchemy python3-pytest python3-virtualenv python3-bottleneck python-bottleneck-doc python3-selenium
@@ -67,6 +67,9 @@ sudo apt install -y krita inkscape
 
 # VLC Media Player
 sudo apt install -y vlc
+
+# SMPlayer (Media Player)
+sudo apt install -y smplayer
 
 # Media Info
 sudo apt install -y mediainfo mediainfo-gui
