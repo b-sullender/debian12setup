@@ -12,6 +12,37 @@ sudo apt -y dist-upgrade
 # ----- INSTALL Debian APT AVAILABLE SOFTWARE ----- #
 # ------------------------------------------------- #
 
+# Add contrib non-free (rar, etc)
+sudo apt-add-repository --component contrib non-free
+
+# i386 architecture for cross-compilation
+sudo dpkg --add-architecture i386
+
+# Add bullseye repository for python2
+echo "deb http://deb.debian.org/debian/ bullseye main" | sudo tee /etc/apt/sources.list.d/bullseye.list
+
+# Update APT for new architecture, repository and components
+sudo apt update
+
+# General CLI tools
+sudo apt install -y wget gpg curl apt-transport-https speedtest-cli rar unrar
+
+# Essential coding and packaging tools
+sudo apt install -y gcc g++ gcc-multilib g++-multilib gcc-mingw-w64-base nasm fasm build-essential devscripts make ninja-build cmake cmake-gui git debhelper dh-make lintian default-jdk gradle
+
+# Development files, examples, documentation and misc
+sudo apt install -y dbus-x11 libx11-dev libwayland-dev libncurses-dev libssl-dev libcurl4-openssl-dev default-libmysqlclient-dev libopendkim-dev libboost-dev libwebsockets-dev libwebsocketpp-dev libopencv-dev libreadline-dev libgtk-3-dev libgtksourceview-3.0-1 libsdl2-dev libsdl2-doc qtcreator qtbase5-dev libqt5x11extras5-dev qtbase5-private-dev qtbase5-examples qt5-doc qt5-doc-html qtbase5-doc-html libepoxy-dev libpixman-1-dev libsamplerate0-dev libpcap-dev libslirp-dev device-tree-compiler
+
+# Scripting tools
+sudo apt install -y php php-cli php-cgi php-json php-mysql php-curl php-zip php-xml php8.2-common python2 python3 python3-yaml python3-numpy python3-scipy python3-matplotlib python3-pandas python3-requests python3-bs4 python3-django python-django-doc python3-flask python3-sqlalchemy python3-pytest python3-virtualenv python3-bottleneck python-bottleneck-doc python3-selenium
+
+# Code Editors, IDE's and GUI designers
+sudo apt install -y nano gedit wxhexeditor scite kate codeblocks glade
+
+# --------------------------------------- #
+# ----- Desktop Environment (GNOME) ----- #
+# --------------------------------------- #
+
 # Display Manager & Desktop Environment
 sudo apt install -y gnome gnome-tweaks
 sudo apt install -y gnome-shell-extension-prefs chrome-gnome-shell
@@ -30,30 +61,6 @@ gnome-extensions install VitalsCoreCoding.com.v61.shell-extension.zip
 rm dash-to-dockmicxgx.gmail.com.v84.shell-extension.zip
 rm apps-menugnome-shell-extensions.gcampax.github.com.v52.shell-extension.zip
 rm VitalsCoreCoding.com.v61.shell-extension.zip
-
-# General CLI tools
-sudo apt install -y wget gpg curl apt-transport-https speedtest-cli rar
-
-# i386 architecture for cross-compilation
-sudo dpkg --add-architecture i386
-
-# Add bullseye repository for python2
-echo "deb http://deb.debian.org/debian/ bullseye main" | sudo tee /etc/apt/sources.list.d/bullseye.list
-
-# Update APT for new architecture and repository
-sudo apt update
-
-# Essential coding and packaging tools
-sudo apt install -y gcc g++ gcc-multilib g++-multilib gcc-mingw-w64-base nasm fasm build-essential devscripts make ninja-build cmake cmake-gui git debhelper dh-make lintian default-jdk gradle
-
-# Development files examples and documentation
-sudo apt install -y libx11-dev libwayland-dev libncurses-dev libssl-dev libcurl4-openssl-dev default-libmysqlclient-dev libopendkim-dev libboost-dev libwebsockets-dev libwebsocketpp-dev libopencv-dev libreadline-dev libgtk-3-dev libgtksourceview-3.0-1 libsdl2-dev libsdl2-doc qtcreator qtbase5-dev libqt5x11extras5-dev qtbase5-private-dev qtbase5-examples qt5-doc qt5-doc-html qtbase5-doc-html libepoxy-dev libpixman-1-dev libsamplerate0-dev libpcap-dev libslirp-dev device-tree-compiler
-
-# Scripting tools
-sudo apt install -y php php-cli php-cgi php-json php-mysql php-curl php-zip php-xml php8.2-common python2 python3 python3-yaml python3-numpy python3-scipy python3-matplotlib python3-pandas python3-requests python3-bs4 python3-django python-django-doc python3-flask python3-sqlalchemy python3-pytest python3-virtualenv python3-bottleneck python-bottleneck-doc python3-selenium
-
-# Code Editors, IDE's and GUI designers
-sudo apt install -y nano gedit wxhexeditor scite kate codeblocks glade
 
 # -------------------------------------- #
 # ----- GENERAL SOFTWARE AND TOOLS ----- #
@@ -260,8 +267,8 @@ fi
 # ------------------------------- #
 
 # Set GNOME tweaks settings
-gsettings set org.gnome.desktop.wm.preferences button-layout 'icon:minimize,maximize,close'
-gsettings set org.gnome.mutter center-new-windows true
+dbus-launch gsettings set org.gnome.desktop.wm.preferences button-layout 'icon:minimize,maximize,close'
+dbus-launch gsettings set org.gnome.mutter center-new-windows true
 
 # Use the following to find a GNOME setting
 #   gsettings list-recursively > /tmp/gsettings.before
@@ -269,8 +276,8 @@ gsettings set org.gnome.mutter center-new-windows true
 #   diff /tmp/gsettings.before /tmp/gsettings.after | grep '[>|<]'
 
 # Enable extensions
-gnome-extensions enable dash-to-dock@micxgx.gmail.com
-gnome-extensions enable apps-menu@gnome-shell-extensions.gcampax.github.com
+dbus-launch gnome-extensions enable dash-to-dock@micxgx.gmail.com
+dbus-launch gnome-extensions enable apps-menu@gnome-shell-extensions.gcampax.github.com
 
 # ----------------------------------- #
 # ----- Copy icons & wallpapers ----- #
@@ -297,32 +304,32 @@ USERS=$(cut -d: -f1,6 /etc/passwd | awk -F: '$2 ~ /^\/home/ { print $1 }')
 for USER in $USERS; do
   
   # Set wallpaper
-  gsettings set org.gnome.desktop.background picture-uri "file:///$WALLPAPERDIR//niagara river.jpg"
+  dbus-launch gsettings set org.gnome.desktop.background picture-uri "file:///$WALLPAPERDIR//niagara river.jpg"
   
   # ----------------------------------------------- #
   # ----- Set dash-to-dock extension settings ----- #
   # ----------------------------------------------- #
   
   SCHEMADIR="/home/$USER/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas/"
-  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
-  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock dock-fixed true
-  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock extend-height true
-  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock dash-max-icon-size 36
-  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock click-action 'minimize-or-previews'
-  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock animate-show-apps false
-  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock show-trash true
-  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock show-mounts false
-  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock custom-theme-shrink true
-  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock disable-overview-on-startup true
-  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock running-indicator-style 'SEGMENTED'
-  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock unity-backlit-items false
-  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock running-indicator-dominant-color true
-  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock custom-theme-customize-running-dots false
-  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock transparency-mode 'FIXED'
-  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock background-opacity 0.75
+  dbus-launch gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
+  dbus-launch gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock dock-fixed true
+  dbus-launch gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock extend-height true
+  dbus-launch gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock dash-max-icon-size 36
+  dbus-launch gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock click-action 'minimize-or-previews'
+  dbus-launch gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock animate-show-apps false
+  dbus-launch gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock show-trash true
+  dbus-launch gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock show-mounts false
+  dbus-launch gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock custom-theme-shrink true
+  dbus-launch gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock disable-overview-on-startup true
+  dbus-launch gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock running-indicator-style 'SEGMENTED'
+  dbus-launch gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock unity-backlit-items false
+  dbus-launch gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock running-indicator-dominant-color true
+  dbus-launch gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock custom-theme-customize-running-dots false
+  dbus-launch gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock transparency-mode 'FIXED'
+  dbus-launch gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock background-opacity 0.75
   
   # Use the following to list keys and current values of dash-to-dock extension **** change <user> to the actual users directory name ****
-  #   gsettings --schemadir /home/<user>/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas/ list-recursively org.gnome.shell.extensions.dash-to-dock
+  #   dbus-launch gsettings --schemadir /home/<user>/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas/ list-recursively org.gnome.shell.extensions.dash-to-dock
   
 done
 
@@ -330,14 +337,14 @@ done
 # ----- Set favorite-apps ----- #
 # ----------------------------- #
 
-gsettings set org.gnome.shell favorite-apps "['firefox-esr.desktop', 'thunderbird.desktop', 'org.gnome.Terminal.desktop', 'code.desktop', 'org.qt-project.qtcreator.desktop', 'codeblocks.desktop', 'org.kde.kate.desktop', 'org.gnome.gedit.desktop', 'org.gnome.Calculator.desktop', 'github-desktop.desktop', 'cmake-gui.desktop', 'libreoffice-writer.desktop', 'org.gnome.Rhythmbox3.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Calendar.desktop', 'makemkv.desktop', 'virtualbox.desktop', 'org.gnome.Software.desktop', 'gufw.desktop']"
+dbus-launch gsettings set org.gnome.shell favorite-apps "['firefox-esr.desktop', 'thunderbird.desktop', 'org.gnome.Terminal.desktop', 'code.desktop', 'org.qt-project.qtcreator.desktop', 'codeblocks.desktop', 'org.kde.kate.desktop', 'org.gnome.gedit.desktop', 'org.gnome.Calculator.desktop', 'github-desktop.desktop', 'cmake-gui.desktop', 'libreoffice-writer.desktop', 'org.gnome.Rhythmbox3.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Calendar.desktop', 'makemkv.desktop', 'virtualbox.desktop', 'org.gnome.Software.desktop', 'gufw.desktop']"
 
 # Use the following the get your favorite apps list
-#   gsettings get org.gnome.shell favorite-apps
+#   dbus-launch gsettings get org.gnome.shell favorite-apps
 
 # ----------------------- #
 # ----- WE ARE DONE ----- #
 # ----------------------- #
 
-systemctl reboot
+sudo systemctl reboot
 
