@@ -18,7 +18,7 @@ sudo apt-add-repository --component contrib non-free
 # i386 architecture for cross-compilation
 sudo dpkg --add-architecture i386
 
-# Add bullseye repository for python2
+# Add bullseye repository for libvpx6 and libssl1.1 (VirtualBox dependencies), python2
 echo "deb http://deb.debian.org/debian/ bullseye main" | sudo tee /etc/apt/sources.list.d/bullseye.list
 
 # Update APT for new architecture, repository and components
@@ -128,7 +128,7 @@ sudo apt install -y dolphin-emu
 # ----- Atomic Wallet ----- #
 # ------------------------- #
 
-if sudo wget -q --timeout=$timeout https://get.atomicwallet.io/download/atomicwallet-2.70.12.deb; then
+if wget -q --timeout=$timeout https://get.atomicwallet.io/download/atomicwallet-2.70.12.deb; then
     sudo apt install ./atomicwallet-2.70.12.deb
     sudo cp /usr/share/icons/hicolor/0x0/apps/atomic.png /usr/share/icons/hicolor/256x256/apps/atomic.png
     sudo gtk-update-icon-cache /usr/share/icons/hicolor
@@ -141,7 +141,7 @@ fi
 # ----- Google Chrome ----- #
 # ------------------------- #
 
-if sudo wget -q --timeout=$timeout https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb; then
+if wget -q --timeout=$timeout https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb; then
     sudo apt install -y ./google-chrome-stable_current_amd64.deb
     sudo rm google-chrome-stable_current_amd64.deb
 else
@@ -152,7 +152,7 @@ fi
 # ----- Visual Studio Code ----- #
 # ------------------------------ #
 
-if sudo wget -q --timeout=$timeout -O microsoft.asc https://packages.microsoft.com/keys/microsoft.asc; then
+if wget -q --timeout=$timeout -O microsoft.asc https://packages.microsoft.com/keys/microsoft.asc; then
     gpg --dearmor -o microsoft.gpg microsoft.asc
     sudo mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg
     sudo rm microsoft.asc
@@ -178,7 +178,7 @@ fi
 # ----- GitHub Desktop ----- #
 # -------------------------- #
 
-if sudo wget -q --timeout=$timeout -O gpg.key https://apt.packages.shiftkey.dev/gpg.key; then
+if wget -q --timeout=$timeout -O gpg.key https://apt.packages.shiftkey.dev/gpg.key; then
     sudo gpg --dearmor -o /usr/share/keyrings/shiftkey-packages.gpg gpg.key
     sudo rm gpg.key
     sudo sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/shiftkey-packages.gpg] https://apt.packages.shiftkey.dev/ubuntu/ any main" > /etc/apt/sources.list.d/shiftkey-packages.list'
@@ -202,7 +202,7 @@ sudo dpkg -i packages/makemkv_1.17.6_amd64.deb
 # ------- Microsoft .NET ------- #
 # ------------------------------ #
 
-if sudo wget -q --timeout=$timeout -O packages-microsoft-prod.deb https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb; then
+if wget -q --timeout=$timeout -O packages-microsoft-prod.deb https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb; then
     if sudo dpkg -i packages-microsoft-prod.deb; then
         sudo rm packages-microsoft-prod.deb
         sudo apt update
@@ -229,10 +229,9 @@ fi
 # ---------------------- #
 
 # Install dependencies
-sudo dpkg -i packages/libssl1.1_1.1.1n-0+deb10u3_amd64.deb
-sudo dpkg -i packages/libvpx6_1.9.0-1+deb11u2_amd64.deb
+sudo apt install libvpx6 libssl1.1
 
-if sudo wget -q --timeout=$timeout -O oracle_vbox_2016.asc https://www.virtualbox.org/download/oracle_vbox_2016.asc; then
+if wget -q --timeout=$timeout -O oracle_vbox_2016.asc https://www.virtualbox.org/download/oracle_vbox_2016.asc; then
     sudo gpg --dearmor --yes --output /usr/share/keyrings/oracle-virtualbox-2016.gpg oracle_vbox_2016.asc
     sudo rm oracle_vbox_2016.asc
     sudo sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/oracle-virtualbox-2016.gpg] https://download.virtualbox.org/virtualbox/debian bookworm contrib" > /etc/apt/sources.list.d/virtualbox.list'
@@ -241,7 +240,7 @@ if sudo wget -q --timeout=$timeout -O oracle_vbox_2016.asc https://www.virtualbo
     if sudo apt install -y virtualbox-7.0; then
         echo "VirtualBox installed successfully."
         # Download and install the VirtualBox Extension Pack
-        if sudo wget -q --timeout=$timeout https://download.virtualbox.org/virtualbox/7.0.0/Oracle_VM_VirtualBox_Extension_Pack-7.0.0.vbox-extpack; then
+        if wget -q --timeout=$timeout https://download.virtualbox.org/virtualbox/7.0.0/Oracle_VM_VirtualBox_Extension_Pack-7.0.0.vbox-extpack; then
             sudo VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-7.0.0.vbox-extpack
             sudo rm Oracle_VM_VirtualBox_Extension_Pack-7.0.0.vbox-extpack
         else
