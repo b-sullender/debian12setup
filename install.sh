@@ -1,5 +1,8 @@
 #!/bin/bash
 
+timeout=10
+error_log="debian12setup.log"
+
 # System updates
 sudo apt -y update
 sudo apt -y upgrade
@@ -31,11 +34,14 @@ rm VitalsCoreCoding.com.v61.shell-extension.zip
 # General CLI tools
 sudo apt install -y wget gpg curl apt-transport-https speedtest-cli rar
 
+# i386 architecture for cross-compilation
+sudo dpkg --add-architecture i386
+
 # Essential coding and packaging tools
 sudo apt install -y gcc g++ gcc-multilib g++-multilib gcc-mingw-w64-base nasm fasm build-essential devscripts make ninja-build cmake cmake-gui git debhelper dh-make lintian default-jdk gradle
 
 # Development files examples and documentation
-sudo apt install -y libx11-dev libwayland-dev libncurses-dev libssl-dev libcurl4-openssl-dev default-libmysqlclient-dev libopendkim-dev libboost-dev libwebsockets-dev libwebsocketpp-dev libopencv-dev libreadline-dev libgtk-3-dev libgtksourceview-3.0-1 libsdl2-dev libsdl2-doc qtcreator qtbase5-dev libqt5x11extras5-dev qtbase5-private-dev qtbase5-examples qt5-doc qt5-doc-html qtbase5-doc-html libepoxy-dev libpixman-1-dev libsamplerate0-dev libpcap-dev libslirp-dev
+sudo apt install -y libx11-dev libwayland-dev libncurses-dev libssl-dev libcurl4-openssl-dev default-libmysqlclient-dev libopendkim-dev libboost-dev libwebsockets-dev libwebsocketpp-dev libopencv-dev libreadline-dev libgtk-3-dev libgtksourceview-3.0-1 libsdl2-dev libsdl2-doc qtcreator qtbase5-dev libqt5x11extras5-dev qtbase5-private-dev qtbase5-examples qt5-doc qt5-doc-html qtbase5-doc-html libepoxy-dev libpixman-1-dev libsamplerate0-dev libpcap-dev libslirp-dev device-tree-compiler
 
 # Scripting tools
 sudo apt install -y php php-cli php-cgi php-json php-mysql php-curl php-zip php-xml php-fileinfo python3 python3-yaml python3-numpy python3-scipy python3-matplotlib python3-pandas python3-requests python3-bs4 python3-django python-django-doc python3-flask python3-sqlalchemy python3-pytest python3-virtualenv python3-bottleneck python-bottleneck-doc python3-selenium
@@ -70,6 +76,9 @@ sudo apt install -y vlc
 
 # SMPlayer (Media Player)
 sudo apt install -y smplayer
+
+# Thumbnailer used by file managers to create thumbnails for your video files
+sudo apt install -y ffmpegthumbnailer
 
 # Media Info
 sudo apt install -y mediainfo mediainfo-gui
@@ -106,104 +115,139 @@ sudo apt install -y dolphin-emu
 # ----- Atomic Wallet ----- #
 # ------------------------- #
 
-# Download the application
-wget https://get.atomicwallet.io/download/atomicwallet-2.70.12.deb
-
-# Install the application
-sudo apt install ./atomicwallet-2.70.12.deb
-
-# Copy the icon to a suitable location
-sudo cp /usr/share/icons/hicolor/0x0/apps/atomic.png /usr/share/icons/hicolor/256x256/apps/atomic.png
-
-# Update icon cache for Atomic Wallet
-sudo gtk-update-icon-cache /usr/share/icons/hicolor
+if sudo wget -q --timeout=$timeout https://get.atomicwallet.io/download/atomicwallet-2.70.12.deb; then
+    sudo apt install ./atomicwallet-2.70.12.deb
+    sudo cp /usr/share/icons/hicolor/0x0/apps/atomic.png /usr/share/icons/hicolor/256x256/apps/atomic.png
+    sudo gtk-update-icon-cache /usr/share/icons/hicolor
+    sudo rm atomicwallet-2.70.12.deb
+else
+    echo "Failed to download Atomic Wallet." | sudo tee -a $error_log
+fi
 
 # ------------------------- #
 # ----- Google Chrome ----- #
 # ------------------------- #
 
-wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-sudo apt install -y ./google-chrome-stable_current_amd64.deb
-rm google-chrome-stable_current_amd64.deb
+if sudo wget -q --timeout=$timeout https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb; then
+    sudo apt install -y ./google-chrome-stable_current_amd64.deb
+    sudo rm google-chrome-stable_current_amd64.deb
+else
+    echo "Failed to download Google Chrome." | sudo tee -a $error_log
+fi
 
 # ------------------------------ #
 # ----- Visual Studio Code ----- #
 # ------------------------------ #
 
-curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
-sudo mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg
-sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list'
-
-sudo apt update
-sudo apt install code
-
-# Install extensions
-code --install-extension ms-vscode.cpptools
-code --install-extension ms-vscode.cpptools-themes
-code --install-extension ms-vscode.cpptools-extension-pack
-code --install-extension ms-vscode.cmake-tools
-code --install-extension ms-dotnettools.csharp
-code --install-extension GitHub.copilot
+if sudo wget -q --timeout=$timeout -O microsoft.asc https://packages.microsoft.com/keys/microsoft.asc; then
+    gpg --dearmor -o microsoft.gpg microsoft.asc
+    sudo mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg
+    sudo rm microsoft.asc
+    sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list'
+    sudo apt update
+    if sudo apt install -y code; then
+        echo "Visual Studio Code installed successfully."
+        # Install extensions
+        code --install-extension ms-vscode.cpptools
+        code --install-extension ms-vscode.cpptools-themes
+        code --install-extension ms-vscode.cpptools-extension-pack
+        code --install-extension ms-vscode.cmake-tools
+        code --install-extension ms-dotnettools.csharp
+        code --install-extension GitHub.copilot
+    else
+        echo "Failed to install Visual Studio Code." | sudo tee -a $error_log
+    fi
+else
+    echo "Failed to download the GPG key for Visual Studio Code." | sudo tee -a $error_log
+fi
 
 # -------------------------- #
 # ----- GitHub Desktop ----- #
 # -------------------------- #
 
-wget -qO - https://apt.packages.shiftkey.dev/gpg.key | gpg --dearmor | sudo tee /usr/share/keyrings/shiftkey-packages.gpg > /dev/null
-sudo sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/shiftkey-packages.gpg] https://apt.packages.shiftkey.dev/ubuntu/ any main" > /etc/apt/sources.list.d/shiftkey-packages.list'
-
-sudo apt update
-sudo apt install github-desktop
+if sudo wget -q --timeout=$timeout -O gpg.key https://apt.packages.shiftkey.dev/gpg.key; then
+    sudo gpg --dearmor -o /usr/share/keyrings/shiftkey-packages.gpg gpg.key
+    sudo rm gpg.key
+    sudo sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/shiftkey-packages.gpg] https://apt.packages.shiftkey.dev/ubuntu/ any main" > /etc/apt/sources.list.d/shiftkey-packages.list'
+    sudo apt update
+    if sudo apt install -y github-desktop; then
+        echo "Github Desktop installed successfully."
+    else
+        echo "Failed to install Github Desktop." | sudo tee -a $error_log
+    fi
+else
+    echo "Failed to download the GPG key for shiftkey - Github Desktop."
+fi
 
 # ------------------- #
 # ----- MakeMKV ----- #
 # ------------------- #
 
-sudo dpkg -i packages/makemkv_1.17.5_amd64.deb
+sudo dpkg -i packages/makemkv_1.17.6_amd64.deb
 
-# ------------------------ #
-# ----- Install .NET ----- #
-# ------------------------ #
+# ------------------------------ #
+# ------- Microsoft .NET ------- #
+# ------------------------------ #
 
-wget https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-sudo dpkg -i packages-microsoft-prod.deb
-rm packages-microsoft-prod.deb
-
-sudo apt update
-sudo apt install -y dotnet-sdk-7.0 aspnetcore-runtime-7.0
-sudo apt install -y dotnet-sdk-8.0 aspnetcore-runtime-8.0
+if sudo wget -q --timeout=$timeout -O packages-microsoft-prod.deb https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb; then
+    if sudo dpkg -i packages-microsoft-prod.deb; then
+        sudo rm packages-microsoft-prod.deb
+        sudo apt update
+        # Install .NET SDKs and Runtimes
+        if sudo apt install -y dotnet-sdk-7.0 aspnetcore-runtime-7.0; then
+            echo ".NET SDK 7.0 and ASP.NET Core Runtime 7.0 installed successfully."
+        else
+            echo "Failed to install .NET SDK 7.0 and ASP.NET Core Runtime 7.0." | sudo tee -a $error_log
+        fi
+        if sudo apt install -y dotnet-sdk-8.0 aspnetcore-runtime-8.0; then
+            echo ".NET SDK 8.0 and ASP.NET Core Runtime 8.0 installed successfully."
+        else
+            echo "Failed to install .NET SDK 8.0 and ASP.NET Core Runtime 8.0." | sudo tee -a $error_log
+        fi
+    else
+        echo "Failed to install the Microsoft package." | sudo tee -a $error_log
+    fi
+else
+    echo "Failed to download the Microsoft package." | sudo tee -a $error_log
+fi
 
 # ---------------------- #
 # ----- VirtualBox ----- #
 # ---------------------- #
 
-# Download dependencies
-wget http://http.us.debian.org/debian/pool/main/o/openssl/libssl1.1_1.1.1n-0+deb11u5_amd64.deb
-wget http://http.us.debian.org/debian/pool/main/libv/libvpx/libvpx6_1.9.0-1_amd64.deb
-
 # Install dependencies
-sudo dpkg -i libssl1.1_1.1.1n-0+deb11u5_amd64.deb
-sudo dpkg -i libvpx6_1.9.0-1_amd64.deb
+sudo dpkg -i packages/libssl1.1_1.1.1n-0+deb10u3_amd64.deb
+sudo dpkg -i packages/libvpx6_1.9.0-1+deb11u2_amd64.deb
 
-# Delete files
-rm libssl1.1_1.1.1n-0+deb11u5_amd64.deb
-rm libvpx6_1.9.0-1_amd64.deb
-
-wget -O- https://www.virtualbox.org/download/oracle_vbox_2016.asc | sudo gpg --dearmor --yes --output /usr/share/keyrings/oracle-virtualbox-2016.gpg
-sudo sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/oracle-virtualbox-2016.gpg] https://download.virtualbox.org/virtualbox/debian bullseye contrib" > /etc/apt/sources.list.d/virtualbox.list'
-
-sudo apt update
-sudo apt install -y virtualbox-7.0
-
-wget https://download.virtualbox.org/virtualbox/7.0.0/Oracle_VM_VirtualBox_Extension_Pack-7.0.0.vbox-extpack
-VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-7.0.0.vbox-extpack
-rm Oracle_VM_VirtualBox_Extension_Pack-7.0.0.vbox-extpack
-
-# Get the current username
-current_user=$(whoami)
-
-# Add the current user to the 'vboxusers' group
-sudo usermod -aG vboxusers "$current_user"
+if sudo wget -q --timeout=$timeout -O oracle_vbox_2016.asc https://www.virtualbox.org/download/oracle_vbox_2016.asc; then
+    sudo gpg --dearmor --yes --output /usr/share/keyrings/oracle-virtualbox-2016.gpg oracle_vbox_2016.asc
+    sudo rm oracle_vbox_2016.asc
+    sudo sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/oracle-virtualbox-2016.gpg] https://download.virtualbox.org/virtualbox/debian bookworm contrib" > /etc/apt/sources.list.d/virtualbox.list'
+    sudo apt update
+    # Install VirtualBox
+    if sudo apt install -y virtualbox-7.0; then
+        echo "VirtualBox installed successfully."
+        # Download and install the VirtualBox Extension Pack
+        if sudo wget -q --timeout=$timeout https://download.virtualbox.org/virtualbox/7.0.0/Oracle_VM_VirtualBox_Extension_Pack-7.0.0.vbox-extpack; then
+            sudo VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-7.0.0.vbox-extpack
+            sudo rm Oracle_VM_VirtualBox_Extension_Pack-7.0.0.vbox-extpack
+        else
+            echo "Failed to download the VirtualBox Extension Pack." | sudo tee -a $error_log
+        fi
+        # Get the current username
+        current_user=$(whoami)
+        # Add the current user to the 'vboxusers' group
+        if sudo usermod -aG vboxusers "$current_user"; then
+            echo "User $current_user added to vboxusers group."
+        else
+            echo "Failed to add user $current_user to vboxusers group." | sudo tee -a $error_log
+        fi
+    else
+        echo "Failed to install VirtualBox." | sudo tee -a $error_log
+    fi
+else
+    echo "Failed to download the GPG key for VirtualBox." | sudo tee -a $error_log
+fi
 
 # ------------------------------- #
 # ----- Setup GNOME Desktop ----- #
