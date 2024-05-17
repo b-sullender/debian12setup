@@ -10,7 +10,7 @@ This script automates the setup process for a Debian 12 system, installing vario
 
 1. Login to the terminal as root & install required packages:
    ```shell
-   apt install -y wget zip sudo
+   apt install -y wget zip sudo git
    ```
    Optionally install drivers: [Installing Drivers](drivers.md)
 2. Add your normal user to the sudo group & reboot:
@@ -19,13 +19,12 @@ This script automates the setup process for a Debian 12 system, installing vario
    reboot
    ```
    Note: change `<user>` to your actual username.
-3. Login to the terminal as your normal user & download the setup script:
+3. Login to the terminal as your normal user & clone the repository using git:
    ```shell
-   wget https://github.com/sullewarehouse/debian12setup/releases/download/v2.0/debian12setup-v2.0.zip
+   git clone https://github.com/b-sullender/debian12setup.git
    ```
-4. Unzip and open directory:
+4. Open directory:
    ```shell
-   unzip debian12setup-v2.0.zip
    cd debian12setup
    ```
 5. Make the script executable:
