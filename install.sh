@@ -38,15 +38,19 @@ sudo apt update
 
 # General CLI tools
 echo "Installing general CLI tools"
-sudo apt install -y wget gpg curl apt-transport-https speedtest-cli rar unrar
+sudo apt install -y wget gpg curl apt-transport-https speedtest-cli rar unrar jq htop net-tools bc lzop
 
 # Essential coding and packaging tools
 echo "Installing essential coding and packaging tools"
-sudo apt install -y gcc g++ gcc-multilib g++-multilib gcc-mingw-w64-base nasm fasm build-essential devscripts make ninja-build cmake cmake-gui git debhelper dh-make lintian default-jdk gradle
+sudo apt install -y gcc g++ gcc-multilib g++-multilib gcc-mingw-w64-base nasm fasm build-essential devscripts make ninja-build cmake cmake-gui git debhelper dh-make lintian default-jdk gradle libc6-i386 flex bison
 
-# Development files, examples, documentation and misc
+# Development files, examples, documentation, and misc packages
 echo "Installing development files, examples, documentation and misc packages"
-sudo apt install -y dbus-x11 libx11-dev libwayland-dev libncurses-dev libssl-dev libcurl4-openssl-dev default-libmysqlclient-dev libopendkim-dev libboost-dev libwebsockets-dev libwebsocketpp-dev libopencv-dev libreadline-dev libgtk-3-dev libgtksourceview-3.0-1 libsdl2-dev libsdl2-doc qtcreator qtbase5-dev libqt5x11extras5-dev qtbase5-private-dev qtbase5-examples qt5-doc qt5-doc-html qtbase5-doc-html libepoxy-dev libpixman-1-dev libsamplerate0-dev libpcap-dev libslirp-dev device-tree-compiler
+sudo apt install -y dbus-x11 libx11-dev libwayland-dev libncurses-dev libssl-dev libcurl4-openssl-dev default-libmysqlclient-dev libopendkim-dev libboost-dev libwebsockets-dev libwebsocketpp-dev libopencv-dev libreadline-dev libgtk-3-dev libgtksourceview-3.0-1 libsdl2-dev libsdl2-doc qtcreator qtbase5-dev libqt5x11extras5-dev qtbase5-private-dev qtbase5-examples qt5-doc qt5-doc-html qtbase5-doc-html libepoxy-dev libpixman-1-dev libsamplerate0-dev libpcap-dev libslirp-dev libelf-dev
+
+# Cross-compilation and embedded system packages
+echo "Installing cross-compilation and embedded system packages"
+sudo apt install -y device-tree-compiler zlib1g:i386
 
 # Scripting tools
 echo "Installing scripting tools"
