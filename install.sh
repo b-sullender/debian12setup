@@ -42,7 +42,7 @@ sudo apt install -y wget gpg curl apt-transport-https speedtest-cli rar unrar jq
 
 # Essential coding and packaging tools
 echo "Installing essential coding and packaging tools"
-sudo apt install -y gcc g++ gcc-multilib g++-multilib gcc-mingw-w64-base nasm fasm build-essential devscripts make ninja-build cmake cmake-gui git debhelper dh-make lintian default-jdk gradle libc6-i386 flex bison
+sudo apt install -y gcc g++ gcc-multilib g++-multilib gcc-mingw-w64-base nasm fasm build-essential devscripts make ninja-build cmake cmake-gui git debhelper dh-make lintian default-jdk gradle libc6-i386 flex bison pahole
 
 # Development files, examples, documentation, and misc packages
 echo "Installing development files, examples, documentation and misc packages"
