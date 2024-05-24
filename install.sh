@@ -109,6 +109,9 @@ sudo apt install -y libreoffice
 # Image editing & painting software
 sudo apt install -y krita inkscape
 
+# Sample any color from anywhere on the desktop, create palettes or import from images
+sudo apt install -y gpick
+
 # VLC Media Player
 sudo apt install -y vlc
 
@@ -306,9 +309,19 @@ fi
 
 echo "Setting up GNOME tweaks and extensions"
 
+# Check if DBUS_SESSION_BUS_ADDRESS is set
+if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
+    echo "D-Bus session not found. Starting a new session..."
+    eval $(dbus-launch)
+    export DBUS_SESSION_BUS_ADDRESS
+    export DBUS_SESSION_BUS_PID
+else
+    echo "D-Bus session already running."
+fi
+
 # Set GNOME tweaks settings
-dbus-launch gsettings set org.gnome.desktop.wm.preferences button-layout 'icon:minimize,maximize,close'
-dbus-launch gsettings set org.gnome.mutter center-new-windows true
+gsettings set org.gnome.desktop.wm.preferences button-layout 'icon:minimize,maximize,close'
+gsettings set org.gnome.mutter center-new-windows true
 
 # Use the following to find a GNOME setting
 #   gsettings list-recursively > /tmp/gsettings.before
@@ -316,8 +329,8 @@ dbus-launch gsettings set org.gnome.mutter center-new-windows true
 #   diff /tmp/gsettings.before /tmp/gsettings.after | grep '[>|<]'
 
 # Enable extensions
-dbus-launch gnome-extensions enable dash-to-dock@micxgx.gmail.com
-dbus-launch gnome-extensions enable apps-menu@gnome-shell-extensions.gcampax.github.com
+gnome-extensions enable dash-to-dock@micxgx.gmail.com
+gnome-extensions enable apps-menu@gnome-shell-extensions.gcampax.github.com
 
 # ----------------------------------- #
 # ----- Copy icons & wallpapers ----- #
@@ -348,32 +361,38 @@ USERS=$(cut -d: -f1,6 /etc/passwd | awk -F: '$2 ~ /^\/home/ { print $1 }')
 for USER in $USERS; do
   
   # Set wallpaper
-  dbus-launch gsettings set org.gnome.desktop.background picture-uri "file:///$WALLPAPERDIR//niagara river.jpg"
+  #gsettings set org.gnome.desktop.background picture-uri "file:///$WALLPAPERDIR//niagara river.jpg"
+  #gsettings set org.gnome.desktop.background picture-uri-dark "file:///$WALLPAPERDIR//niagara river.jpg"
+  
+  # Or select a random wallpaper
+  WALLPAPER=$(ls $WALLPAPERDIR | shuf -n 1)
+  gsettings set org.gnome.desktop.background picture-uri "file:///$WALLPAPERDIR//$WALLPAPER"
+  gsettings set org.gnome.desktop.background picture-uri-dark "file:///$WALLPAPERDIR//$WALLPAPER"
   
   # ----------------------------------------------- #
   # ----- Set dash-to-dock extension settings ----- #
   # ----------------------------------------------- #
   
   SCHEMADIR="/home/$USER/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas/"
-  dbus-launch gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
-  dbus-launch gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock dock-fixed true
-  dbus-launch gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock extend-height true
-  dbus-launch gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock dash-max-icon-size 36
-  dbus-launch gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock click-action 'minimize-or-previews'
-  dbus-launch gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock animate-show-apps false
-  dbus-launch gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock show-trash true
-  dbus-launch gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock show-mounts false
-  dbus-launch gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock custom-theme-shrink true
-  dbus-launch gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock disable-overview-on-startup true
-  dbus-launch gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock running-indicator-style 'SEGMENTED'
-  dbus-launch gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock unity-backlit-items false
-  dbus-launch gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock running-indicator-dominant-color true
-  dbus-launch gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock custom-theme-customize-running-dots false
-  dbus-launch gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock transparency-mode 'FIXED'
-  dbus-launch gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock background-opacity 0.75
+  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
+  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock dock-fixed true
+  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock extend-height true
+  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock dash-max-icon-size 36
+  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock click-action 'minimize-or-previews'
+  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock animate-show-apps false
+  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock show-trash true
+  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock show-mounts false
+  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock custom-theme-shrink true
+  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock disable-overview-on-startup true
+  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock running-indicator-style 'SEGMENTED'
+  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock unity-backlit-items false
+  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock running-indicator-dominant-color true
+  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock custom-theme-customize-running-dots false
+  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock transparency-mode 'FIXED'
+  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock background-opacity 0.75
   
   # Use the following to list keys and current values of dash-to-dock extension **** change <user> to the actual users directory name ****
-  #   dbus-launch gsettings --schemadir /home/<user>/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas/ list-recursively org.gnome.shell.extensions.dash-to-dock
+  #   gsettings --schemadir /home/<user>/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas/ list-recursively org.gnome.shell.extensions.dash-to-dock
   
 done
 
@@ -381,10 +400,10 @@ done
 # ----- Set favorite-apps ----- #
 # ----------------------------- #
 
-dbus-launch gsettings set org.gnome.shell favorite-apps "['firefox-esr.desktop', 'thunderbird.desktop', 'org.gnome.Terminal.desktop', 'code.desktop', 'org.qt-project.qtcreator.desktop', 'codeblocks.desktop', 'org.kde.kate.desktop', 'org.gnome.gedit.desktop', 'org.gnome.Calculator.desktop', 'github-desktop.desktop', 'cmake-gui.desktop', 'libreoffice-writer.desktop', 'org.gnome.Rhythmbox3.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Calendar.desktop', 'makemkv.desktop', 'virtualbox.desktop', 'org.gnome.Software.desktop', 'gufw.desktop']"
+gsettings set org.gnome.shell favorite-apps "['firefox-esr.desktop', 'thunderbird.desktop', 'org.gnome.Terminal.desktop', 'code.desktop', 'org.qt-project.qtcreator.desktop', 'codeblocks.desktop', 'org.kde.kate.desktop', 'org.gnome.gedit.desktop', 'org.gnome.Calculator.desktop', 'github-desktop.desktop', 'cmake-gui.desktop', 'libreoffice-writer.desktop', 'org.gnome.Rhythmbox3.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Calendar.desktop', 'makemkv.desktop', 'virtualbox.desktop', 'org.gnome.Software.desktop', 'gufw.desktop']"
 
 # Use the following the get your favorite apps list
-#   dbus-launch gsettings get org.gnome.shell favorite-apps
+#   gsettings get org.gnome.shell favorite-apps
 
 # ----------------------- #
 # ----- WE ARE DONE ----- #
