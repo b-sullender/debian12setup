@@ -332,18 +332,47 @@ gsettings set org.gnome.mutter center-new-windows true
 gnome-extensions enable dash-to-dock@micxgx.gmail.com
 gnome-extensions enable apps-menu@gnome-shell-extensions.gcampax.github.com
 
-# ----------------------------------- #
-# ----- Copy icons & wallpapers ----- #
-# ----------------------------------- #
+# ----------------------------------------------- #
+# ----- Copy wallpapers and create XML file ----- #
+# ----------------------------------------------- #
 
 echo "Copying icons & wallpapers"
 
 # Wallpaper directory
 WALLPAPERDIR="/usr/share/backgrounds/wallpapers"
-sudo mkdir $WALLPAPERDIR
+sudo mkdir -p $WALLPAPERDIR
 
 # Copy wallpapers
 sudo cp -r wallpapers/* $WALLPAPERDIR
+
+# Output XML file for wallpapers
+XMLFILE="/usr/share/gnome-background-properties/d12setup-wallpapers.xml"
+sudo mkdir -p $(dirname $XMLFILE)
+
+# Start XML content
+XMLCONTENT='<?xml version="1.0"?>\n<!DOCTYPE wallpapers SYSTEM "gnome-wp-list.dtd">\n<wallpapers>\n'
+
+# Iterate over each file in the wallpaper directory
+for FILE in "$WALLPAPERDIR"/*; do
+  BASENAME=$(basename "$FILE")
+  XMLCONTENT+="  <wallpaper>\n"
+  XMLCONTENT+="    <name>$BASENAME</name>\n"
+  XMLCONTENT+="    <filename>$WALLPAPERDIR/$BASENAME</filename>\n"
+  XMLCONTENT+="    <options>zoom</options>\n"
+  XMLCONTENT+="    <shade_type>solid</shade_type>\n"
+  XMLCONTENT+="  </wallpaper>\n"
+done
+
+# Close XML content
+XMLCONTENT+="</wallpapers>"
+
+# Write XML content to file
+echo -e $XMLCONTENT | sudo tee $XMLFILE > /dev/null
+echo "Wallpaper XML file created at $XMLFILE"
+
+# -------------------------------------------------- #
+# ----- Delete unwanted icons & copy new icons ----- #
+# -------------------------------------------------- #
 
 # Delete Code::Blocks original icon
 sudo rm /usr/share/pixmaps/codeblocks.png
