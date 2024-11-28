@@ -1,45 +1,54 @@
-# Debian 12 Setup Script
+# Debian Setup Scripts
 
-This script automates the setup process for a Debian 12 system, installing various software packages, configuring the GNOME desktop environment, and setting up development tools.
+These scripts automates the setup process for a Debian system, installing various software packages, configuring the GNOME desktop environment, and setting up development tools.
 
 ## Prerequisites
 
-- A fresh installation of Debian 12 without any desktop environment.
+- A fresh minimal installation of Debian without a desktop environment.
+- Access to a user account with root privileges.
+
+**Important:** If you assigned a password to the root account during the Debian installation, your regular user account may not have root privileges. To grant root privileges to your regular user, add the user to the `sudo` group as follows:
+
+1. Install the `sudo` package:
+   ```shell
+   apt install sudo
+   ```
+
+2. Add your user to the `sudo` group:
+   ```shell
+   usermod -aG sudo <username>
+   ```
+   Replace `<username>` with your actual username.
 
 ## Usage
 
-1. Login to the terminal as root & install required packages:
-   ```shell
-   apt install -y wget zip sudo git
-   ```
-   Optionally install drivers: [Installing Drivers](drivers.md)
-2. Add your normal user to the sudo group & reboot:
-   ```shell
-   usermod -aG sudo <user>
-   reboot
-   ```
-   Note: change `<user>` to your actual username.
-3. Login to the terminal as your normal user & clone the repository using git:
-   ```shell
-   git clone https://github.com/b-sullender/debian12setup.git
-   ```
-4. Open directory:
-   ```shell
-   cd debian12setup
-   ```
-5. Make the script executable:
-   ```shell
-   chmod +x install.sh
-   ```
-6. Run the script:
-   ```shell
-   bash install.sh
-   ```
-   Note: the script must be run as your normal user, the script will ask for root privileges to perform system updates and package installations if needed.
+To set up your Debian system, follow these steps:
 
-7. Follow the prompts and enter any required information during the script execution.
+1. **Install Required Packages**  
+   Run the following command to install necessary tools:  
+   ```shell
+   apt install -y wget zip git
+   ```
+   *Optional:* For driver installation, refer to the [Installing Drivers](drivers.md) guide.
 
-8. Sit back and relax! The script will automatically update the system, install software packages, and configure the GNOME desktop environment. Once the script finishes, your Debian 12 system will be ready for use.
+2. **Clone the Repository**  
+   Use `git` to clone this repository:  
+   ```shell
+   git clone https://github.com/b-sullender/debian-setup.git
+   ```
+
+3. **Navigate to the Repository Directory**  
+   ```shell
+   cd debian-setup
+   ```
+
+4. **Run the Setup Script**  
+   Execute the setup script:  
+   ```shell
+   bash bookworm.sh
+   ```
+
+   Follow the prompts during execution and provide any required inputs. The script will update your system, install software packages, and configure the GNOME desktop environment. Once complete, your Debian system will be fully configured and ready for use.
 
 ## 4K Resolution & Above
 

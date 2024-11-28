@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Check if we are running as root
+# Installation and packaging should always run as root!
+if [ "$$(id -u)" -ne 0 ]; then echo "Please run as root 'sudo bash bookworm.sh'"; exit 1; fi
+
+# Set default variables
 timeout=10
 error_log="debian12setup.log"
 
@@ -152,6 +157,13 @@ sudo apt install -y dolphin-emu
 # ----- INSTALL Debian NON-APT SOFTWARE ----- #
 # ------------------------------------------- #
 
+# Get current users to Customize settings for
+USERS=$(cut -d: -f1,6 /etc/passwd | awk -F: '$2 ~ /^\/home/ { print $1 }')
+echo 'CURRENT USERS:'
+for USER in $USERS; do
+    echo $USER
+done
+
 # ------------------------- #
 # ----- Atomic Wallet ----- #
 # ------------------------- #
@@ -271,6 +283,7 @@ fi
 echo "Installing VirtualBox dependencies (libvpx6, libssl1.1)"
 sudo apt install -y libvpx6 libssl1.1
 
+# Install VirtualBox itself
 echo "Downloading VirtualBox GPG key"
 if wget -q --timeout=$timeout -O oracle_vbox_2016.asc https://www.virtualbox.org/download/oracle_vbox_2016.asc; then
     sudo gpg --dearmor --yes --output /usr/share/keyrings/oracle-virtualbox-2016.gpg oracle_vbox_2016.asc
@@ -288,14 +301,14 @@ if wget -q --timeout=$timeout -O oracle_vbox_2016.asc https://www.virtualbox.org
         else
             echo "Failed to download the VirtualBox Extension Pack." | sudo tee -a $error_log
         fi
-        # Get the current username
-        current_user=$(whoami)
-        # Add the current user to the 'vboxusers' group
-        if sudo usermod -aG vboxusers "$current_user"; then
-            echo "User $current_user added to vboxusers group."
-        else
-            echo "Failed to add user $current_user to vboxusers group." | sudo tee -a $error_log
-        fi
+        # Add all current users to the 'vboxusers' group
+        for USER in $USERS; do
+            if sudo usermod -aG vboxusers "$USER"; then
+                echo "User $USER added to vboxusers group."
+            else
+                echo "Failed to add user $USER to vboxusers group." | sudo tee -a $error_log
+            fi
+        done
     else
         echo "Failed to install VirtualBox." | sudo tee -a $error_log
     fi
@@ -385,8 +398,6 @@ sudo cp icons/codeblocks.svg /usr/share/pixmaps/codeblocks.svg
 # --------------------------------------- #
 
 echo "Setting user GNOME extensions & settings"
-
-USERS=$(cut -d: -f1,6 /etc/passwd | awk -F: '$2 ~ /^\/home/ { print $1 }')
 for USER in $USERS; do
   
   # Set wallpaper
