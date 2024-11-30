@@ -48,14 +48,16 @@ To set up your Debian system, follow these steps:
    bash bookworm.sh
    ```
 
-   Follow the prompts during execution and provide any required inputs. The script will update your system, install software packages, and configure the GNOME desktop environment. Once complete, your Debian system will be fully configured and ready for use.
+   Follow the prompts during execution and provide any required inputs.
+
+## GNOME
 
 If your using the GNOME desktop environment or want to install it with the recommended configuration, run the GNOME configuration script:
 ```shell
 bash config-gnome.sh
 ```
 
-## 4K Resolution & Above
+### 4K Resolution & Above
 
 If you are using a 4K resolution or higher, you may want to scale the login screen accordingly. Follow these steps to adjust the login screen scaling:
 
