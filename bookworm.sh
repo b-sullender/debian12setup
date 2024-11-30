@@ -13,7 +13,7 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 # Save both stdout and stderr to a single file through tee
-exec > >(tee output.log) 2>&1
+exec > >(tee bookworm.log) 2>&1
 
 # Set a timeout for wget (downloads) so the script doesn't hang indefinitely
 timeout=10

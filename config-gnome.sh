@@ -8,9 +8,12 @@ print_red() {
 # Check if we are running as root
 # - Configuring GNOME settings is user specific and root causes issues
 if [ "$(id -u)" -eq 0 ]; then
-    print_red "Please run as non-root 'bash config-gnome.sh'"
+    print_red "Please run as non-root (NOT root) 'bash config-gnome.sh'"
     exit 1
 fi
+
+# Save both stdout and stderr to a single file through tee
+exec > >(tee config-gnome.log) 2>&1
 
 # Function to install necessary packages
 check_and_install() {
@@ -31,7 +34,12 @@ check_and_install() {
         echo "Packages ${MISSING_PKGS[@]} are not installed."
         read -p "Do you want to install them now? (y/n): " response
         if [ "$response" = "y" ]; then
-            sudo apt install -y "${MISSING_PKGS[@]}"
+            if sudo apt install -y "${MISSING_PKGS[@]}"; then
+                echo "${MISSING_PKGS[@]} installed successfully."
+            else
+                print_red "Failed to install ${MISSING_PKGS[@]}"
+                exit 1
+            fi
         else
             echo "Cannot proceed without ${MISSING_PKGS[@]}. Exiting."
             exit 1
@@ -45,6 +53,15 @@ check_and_install "gnome" "gnome-tweaks" "gnome-shell-extension-prefs" "chrome-g
 # Get user name
 USER=$(whoami)
 
+echo "Configuring GNOME preferences"
+gsettings set org.gnome.desktop.wm.preferences button-layout 'icon:minimize,maximize,close'
+gsettings set org.gnome.mutter center-new-windows true
+
+# Use the following to find a GNOME setting
+#   gsettings list-recursively > /tmp/gsettings.before
+#   gsettings list-recursively > /tmp/gsettings.after
+#   diff /tmp/gsettings.before /tmp/gsettings.after | grep '[>|<]'
+
 echo "Downloading GNOME extensions"
 wget https://extensions.gnome.org/extension-data/dash-to-dockmicxgx.gmail.com.v84.shell-extension.zip
 wget https://extensions.gnome.org/extension-data/apps-menugnome-shell-extensions.gcampax.github.com.v52.shell-extension.zip
@@ -56,22 +73,12 @@ gnome-extensions install dash-to-dockmicxgx.gmail.com.v84.shell-extension.zip
 gnome-extensions install apps-menugnome-shell-extensions.gcampax.github.com.v52.shell-extension.zip
 gnome-extensions install VitalsCoreCoding.com.v61.shell-extension.zip
 gnome-extensions install tactilelundal.io.v27.shell-extension.zip
-mv ~/.local/share/gnome-shell/extensions/* /usr/share/gnome-shell/extensions/
 
 echo "Cleaning up GNOME extension files"
 rm dash-to-dockmicxgx.gmail.com.v84.shell-extension.zip
 rm apps-menugnome-shell-extensions.gcampax.github.com.v52.shell-extension.zip
 rm VitalsCoreCoding.com.v61.shell-extension.zip
 rm tactilelundal.io.v27.shell-extension.zip
-
-echo "Configuring GNOME preferences"
-gsettings set org.gnome.desktop.wm.preferences button-layout 'icon:minimize,maximize,close'
-gsettings set org.gnome.mutter center-new-windows true
-
-# Use the following to find a GNOME setting
-#   gsettings list-recursively > /tmp/gsettings.before
-#   gsettings list-recursively > /tmp/gsettings.after
-#   diff /tmp/gsettings.before /tmp/gsettings.after | grep '[>|<]'
 
 echo "Enabling GNOME extensions"
 gnome-extensions enable dash-to-dock@micxgx.gmail.com
