@@ -1,12 +1,22 @@
 #!/bin/bash
 
-# Check if we are running as root
-# Installation and packaging should always run as root!
-if [ "$$(id -u)" -ne 0 ]; then echo "Please run as root 'sudo bash bookworm.sh'"; exit 1; fi
+# Function to print in red
+print_red() {
+    echo -e "\e[31m$1\e[0m"
+}
 
-# Set default variables
+# Check if we are running as root
+# - Installation and packaging should always run as root!
+if [ "$(id -u)" -ne 0 ]; then
+    echo "Please run as root 'sudo bash bookworm.sh'"
+    exit 1
+fi
+
+# Save both stdout and stderr to a single file through tee
+exec > >(tee output.log) 2>&1
+
+# Set a timeout for wget (downloads) so the script doesn't hang indefinitely
 timeout=10
-error_log="debian12setup.log"
 
 # System updates
 apt -y update
@@ -64,31 +74,6 @@ apt install -y php php-cli php-cgi php-json php-mysql php-curl php-zip php-xml p
 # Code Editors, IDE's and GUI designers
 echo "Installing Code Editors, IDE's and GUI designers"
 apt install -y nano gedit wxhexeditor scite kate codeblocks glade
-
-# --------------------------------------- #
-# ----- Desktop Environment (GNOME) ----- #
-# --------------------------------------- #
-
-# Display Manager & Desktop Environment
-echo "Installing Desktop Environment (GNOME)"
-apt install -y gnome gnome-tweaks
-apt install -y gnome-shell-extension-prefs chrome-gnome-shell
-
-# Download GNOME extensions
-echo "Installing GNOME extensions"
-wget https://extensions.gnome.org/extension-data/dash-to-dockmicxgx.gmail.com.v84.shell-extension.zip
-wget https://extensions.gnome.org/extension-data/apps-menugnome-shell-extensions.gcampax.github.com.v52.shell-extension.zip
-wget https://extensions.gnome.org/extension-data/VitalsCoreCoding.com.v61.shell-extension.zip
-
-# Install GNOME extensions
-gnome-extensions install dash-to-dockmicxgx.gmail.com.v84.shell-extension.zip
-gnome-extensions install apps-menugnome-shell-extensions.gcampax.github.com.v52.shell-extension.zip
-gnome-extensions install VitalsCoreCoding.com.v61.shell-extension.zip
-
-# Delete GNOME extension files
-rm dash-to-dockmicxgx.gmail.com.v84.shell-extension.zip
-rm apps-menugnome-shell-extensions.gcampax.github.com.v52.shell-extension.zip
-rm VitalsCoreCoding.com.v61.shell-extension.zip
 
 # -------------------------------------- #
 # ----- GENERAL SOFTWARE AND TOOLS ----- #
@@ -157,15 +142,15 @@ apt install -y dolphin-emu
 # ----- INSTALL Debian NON-APT SOFTWARE ----- #
 # ------------------------------------------- #
 
-# Get current users to Customize settings for
+# Get current users to configure groups (VirtualBox)
 USERS=$(cut -d: -f1,6 /etc/passwd | awk -F: '$2 ~ /^\/home/ { print $1 }')
-echo 'CURRENT USERS:'
+echo 'Found users for configuring groups:'
 for USER in $USERS; do
     echo $USER
 done
 
 # Copy all GNOME Nautilus (Files) document templates
-echo 'Copying document templates'
+echo 'Copying document templates for Nautilus (Files)'
 for USER in $USERS; do
     # Template directory for user
     TEMPLATEDIR="/home/$USER/Templates/"
@@ -186,7 +171,7 @@ if wget -q --timeout=$timeout https://get.atomicwallet.io/download/atomicwallet-
     gtk-update-icon-cache /usr/share/icons/hicolor
     rm atomicwallet-2.70.12.deb
 else
-    echo "Failed to download Atomic Wallet." | tee -a $error_log
+    print_red "Failed to download Atomic Wallet."
 fi
 
 # ------------------------- #
@@ -199,7 +184,7 @@ if wget -q --timeout=$timeout https://dl.google.com/linux/direct/google-chrome-s
     apt install -y ./google-chrome-stable_current_amd64.deb
     rm google-chrome-stable_current_amd64.deb
 else
-    echo "Failed to download Google Chrome." | tee -a $error_log
+    print_red "Failed to download Google Chrome."
 fi
 
 # ------------------------------ #
@@ -224,10 +209,10 @@ if wget -q --timeout=$timeout -O microsoft.asc https://packages.microsoft.com/ke
         code --install-extension ms-dotnettools.csharp
         code --install-extension GitHub.copilot
     else
-        echo "Failed to install Visual Studio Code." | tee -a $error_log
+        print_red "Failed to install Visual Studio Code."
     fi
 else
-    echo "Failed to download the GPG key for Visual Studio Code." | tee -a $error_log
+    print_red "Failed to download the GPG key for Visual Studio Code."
 fi
 
 # -------------------------- #
@@ -244,10 +229,10 @@ if wget -q --timeout=$timeout -O gpg.key https://apt.packages.shiftkey.dev/gpg.k
     if apt install -y github-desktop; then
         echo "Github Desktop installed successfully."
     else
-        echo "Failed to install Github Desktop." | tee -a $error_log
+        print_red "Failed to install Github Desktop."
     fi
 else
-    echo "Failed to download the GPG key for shiftkey - Github Desktop."
+    print_red "Failed to download the GPG key for shiftkey - Github Desktop."
 fi
 
 # ------------------- #
@@ -271,18 +256,18 @@ if wget -q --timeout=$timeout -O packages-microsoft-prod.deb https://packages.mi
         if apt install -y dotnet-sdk-7.0 aspnetcore-runtime-7.0; then
             echo ".NET SDK 7.0 and ASP.NET Core Runtime 7.0 installed successfully."
         else
-            echo "Failed to install .NET SDK 7.0 and ASP.NET Core Runtime 7.0." | tee -a $error_log
+            print_red "Failed to install .NET SDK 7.0 and ASP.NET Core Runtime 7.0."
         fi
         if apt install -y dotnet-sdk-8.0 aspnetcore-runtime-8.0; then
             echo ".NET SDK 8.0 and ASP.NET Core Runtime 8.0 installed successfully."
         else
-            echo "Failed to install .NET SDK 8.0 and ASP.NET Core Runtime 8.0." | tee -a $error_log
+            print_red "Failed to install .NET SDK 8.0 and ASP.NET Core Runtime 8.0."
         fi
     else
-        echo "Failed to install the Microsoft package." | tee -a $error_log
+        print_red "Failed to install the Microsoft package."
     fi
 else
-    echo "Failed to download the Microsoft package." | tee -a $error_log
+    print_red "Failed to download the Microsoft package."
 fi
 
 # ---------------------- #
@@ -309,55 +294,26 @@ if wget -q --timeout=$timeout -O oracle_vbox_2016.asc https://www.virtualbox.org
             VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-7.0.0.vbox-extpack
             rm Oracle_VM_VirtualBox_Extension_Pack-7.0.0.vbox-extpack
         else
-            echo "Failed to download the VirtualBox Extension Pack." | tee -a $error_log
+            print_red "Failed to download the VirtualBox Extension Pack."
         fi
         # Add all current users to the 'vboxusers' group
         for USER in $USERS; do
             if usermod -aG vboxusers "$USER"; then
                 echo "User $USER added to vboxusers group."
             else
-                echo "Failed to add user $USER to vboxusers group." | tee -a $error_log
+                print_red "Failed to add user $USER to vboxusers group."
             fi
         done
     else
-        echo "Failed to install VirtualBox." | tee -a $error_log
+        print_red "Failed to install VirtualBox."
     fi
 else
-    echo "Failed to download the GPG key for VirtualBox." | tee -a $error_log
+    print_red "Failed to download the GPG key for VirtualBox."
 fi
 
-# ------------------------------- #
-# ----- Setup GNOME Desktop ----- #
-# ------------------------------- #
-
-echo "Setting up GNOME tweaks and extensions"
-
-# Check if DBUS_SESSION_BUS_ADDRESS is set
-if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
-    echo "D-Bus session not found. Starting a new session..."
-    eval $(dbus-launch)
-    export DBUS_SESSION_BUS_ADDRESS
-    export DBUS_SESSION_BUS_PID
-else
-    echo "D-Bus session already running."
-fi
-
-# Set GNOME tweaks settings
-gsettings set org.gnome.desktop.wm.preferences button-layout 'icon:minimize,maximize,close'
-gsettings set org.gnome.mutter center-new-windows true
-
-# Use the following to find a GNOME setting
-#   gsettings list-recursively > /tmp/gsettings.before
-#   gsettings list-recursively > /tmp/gsettings.after
-#   diff /tmp/gsettings.before /tmp/gsettings.after | grep '[>|<]'
-
-# Enable extensions
-gnome-extensions enable dash-to-dock@micxgx.gmail.com
-gnome-extensions enable apps-menu@gnome-shell-extensions.gcampax.github.com
-
-# ----------------------------------------------- #
-# ----- Copy wallpapers and create XML file ----- #
-# ----------------------------------------------- #
+# ------------------------------------------------ #
+# ----- Copy wallpapers and create XML files ----- #
+# ------------------------------------------------ #
 
 echo "Copying icons & wallpapers"
 
@@ -369,7 +325,7 @@ mkdir -p $WALLPAPERDIR
 cp -r wallpapers/* $WALLPAPERDIR
 
 # Output XML file for wallpapers
-XMLFILE="/usr/share/gnome-background-properties/d12setup-wallpapers.xml"
+XMLFILE="/usr/share/gnome-background-properties/setup-wallpapers.xml"
 mkdir -p $(dirname $XMLFILE)
 
 # Start XML content
@@ -402,58 +358,6 @@ rm /usr/share/pixmaps/codeblocks.png
 
 # Copy Code::Blocks new icon
 cp icons/codeblocks.svg /usr/share/pixmaps/codeblocks.svg
-
-# --------------------------------------- #
-# ----- Setup for each user desktop ----- #
-# --------------------------------------- #
-
-echo "Setting user GNOME extensions & settings"
-for USER in $USERS; do
-  
-  # Set wallpaper
-  #gsettings set org.gnome.desktop.background picture-uri "file:///$WALLPAPERDIR//niagara river.jpg"
-  #gsettings set org.gnome.desktop.background picture-uri-dark "file:///$WALLPAPERDIR//niagara river.jpg"
-  
-  # Or select a random wallpaper
-  WALLPAPER=$(ls $WALLPAPERDIR | shuf -n 1)
-  gsettings set org.gnome.desktop.background picture-uri "file:///$WALLPAPERDIR//$WALLPAPER"
-  gsettings set org.gnome.desktop.background picture-uri-dark "file:///$WALLPAPERDIR//$WALLPAPER"
-  
-  # ----------------------------------------------- #
-  # ----- Set dash-to-dock extension settings ----- #
-  # ----------------------------------------------- #
-  
-  SCHEMADIR="/home/$USER/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas/"
-  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
-  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock dock-fixed true
-  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock extend-height true
-  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock dash-max-icon-size 36
-  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock click-action 'minimize-or-previews'
-  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock animate-show-apps false
-  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock show-trash true
-  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock show-mounts false
-  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock custom-theme-shrink true
-  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock disable-overview-on-startup true
-  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock running-indicator-style 'SEGMENTED'
-  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock unity-backlit-items false
-  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock running-indicator-dominant-color true
-  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock custom-theme-customize-running-dots false
-  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock transparency-mode 'FIXED'
-  gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock background-opacity 0.75
-  
-  # Use the following to list keys and current values of dash-to-dock extension **** change <user> to the actual users directory name ****
-  #   gsettings --schemadir /home/<user>/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas/ list-recursively org.gnome.shell.extensions.dash-to-dock
-  
-done
-
-# ----------------------------- #
-# ----- Set favorite-apps ----- #
-# ----------------------------- #
-
-gsettings set org.gnome.shell favorite-apps "['firefox-esr.desktop', 'thunderbird.desktop', 'org.gnome.Terminal.desktop', 'code.desktop', 'org.qt-project.qtcreator.desktop', 'codeblocks.desktop', 'org.kde.kate.desktop', 'org.gnome.gedit.desktop', 'org.gnome.Calculator.desktop', 'github-desktop.desktop', 'cmake-gui.desktop', 'libreoffice-writer.desktop', 'org.gnome.Rhythmbox3.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Calendar.desktop', 'makemkv.desktop', 'virtualbox.desktop', 'org.gnome.Software.desktop', 'gufw.desktop']"
-
-# Use the following the get your favorite apps list
-#   gsettings get org.gnome.shell favorite-apps
 
 # ----------------------- #
 # ----- WE ARE DONE ----- #

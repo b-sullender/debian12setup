@@ -4,7 +4,7 @@ These scripts automates the setup process for a Debian system, installing variou
 
 ## Prerequisites
 
-- A fresh minimal installation of Debian without a desktop environment.
+- A fresh installation of Debian.
 - Access to a user account with root privileges.
 
 **Important:** If you assigned a password to the root account during the Debian installation, your regular user account may not have root privileges. To grant root privileges to your regular user, add the user to the `sudo` group as follows:
@@ -49,6 +49,11 @@ To set up your Debian system, follow these steps:
    ```
 
    Follow the prompts during execution and provide any required inputs. The script will update your system, install software packages, and configure the GNOME desktop environment. Once complete, your Debian system will be fully configured and ready for use.
+
+If your using the GNOME desktop environment or want to install it with the recommended configuration, run the GNOME configuration script:
+```shell
+bash config-gnome.sh
+```
 
 ## 4K Resolution & Above
 
